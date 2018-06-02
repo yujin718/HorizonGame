@@ -1,0 +1,74 @@
+[
+  {
+    "StageID":"Stage1",
+    "StageRequirement":
+    [
+        10,
+        20,
+        30,
+        50
+    ],
+    "FirstTimeReward":"test",
+    "StageReward":
+    [
+        10,
+        20,
+        30,
+        50
+    ],
+    "GoldReward":222,
+    "PlayerExpReward":30,
+    "CharacterExpReward":40,
+    "MeatRequirement":1000,
+    "EnemyWavesDetail":
+    {
+        "HP": 0.1,
+        "Damage": 0.1,
+        "Power": 0.1,
+        "Armor": 0.1,
+        "Speed": 0.01,
+        "ResistFire": 0.01,
+        "ResistWater": 0.01,
+        "ResistEarth": 0.01,
+        "ResistLight": 0.01,
+        "ResistDark": 0.01
+    },
+    "Tries":23
+},
+{
+    "StageID":"Stage2",
+    "StageRequirement":
+    [
+        10,
+        20,
+        30,
+        50
+    ],
+    "FirstTimeReward":"test",
+    "StageReward":
+    [
+        10,
+        20,
+        30,
+        50
+    ],
+    "GoldReward":222,
+    "PlayerExpReward":30,
+    "CharacterExpReward":40,
+    "MeatRequirement":1000,
+    "EnemyWavesDetail":
+    {
+        "HP": 0.1,
+        "Damage": 0.1,
+        "Power": 0.1,
+        "Armor": 0.1,
+        "Speed": 0.01,
+        "ResistFire": 0.01,
+        "ResistWater": 0.01,
+        "ResistEarth": 0.01,
+        "ResistLight": 0.01,
+        "ResistDark": 0.01
+    },
+    "Tries":23
+}
+]

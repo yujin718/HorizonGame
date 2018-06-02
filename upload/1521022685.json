@@ -1,0 +1,14 @@
+{
+    "ServerVersion":"1.0",
+    "ClientVersion":"2.0",
+    "DailyServerReset":"2018-03-08",
+    "MeatRechargeRate":2.5,
+    "BasePvpTicket":3,
+    "PlayerExpTNL":[2,5,2],
+    "PvPReset":"2018-03-20",
+    "PlayerLevelCap":22,
+    "CharacterLevelCap":20,
+    "GulidLevelCap":20,
+    "FreeBasicGashaReset":"2018-03-02",
+    "FreePremiumGashaReset":"2018-03-05"
+}

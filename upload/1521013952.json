@@ -1,0 +1,392 @@
+[
+{
+    "CharacterStatsID":"CStuff1",
+    "Name":"Stuff1",
+    "Description":"Desc",
+    "Role":0,
+    "BaseStats":
+    {
+        "HP": 100,
+        "Damage": 10,
+        "Power": 10,
+        "Armor": 10,
+        "Speed": 0.5,
+        "ResistFire": 0.1,
+        "ResistWater": 0.1,
+        "ResistEarth": 0.1,
+        "ResistLight": 0.1,
+        "ResistDark": 0.1
+    },
+    "BaseStatsGrow":
+    {
+        "HP": 7,
+        "Damage": 1,
+        "Power": 1,
+        "Armor": 1,
+        "Speed": 0.05,
+        "ResistFire": 0.01,
+        "ResistWater": 0.01,
+        "ResistEarth": 0.01,
+        "ResistLight": 0.01,
+        "ResistDark": 0.01
+    },
+    "BorderStats":
+    {
+        "HP": 5,
+        "Damage": 1,
+        "Power": 1,
+        "Armor": 1,
+        "Speed": 0.05,
+        "ResistFire": 0.01,
+        "ResistWater": 0.01,
+        "ResistEarth": 0.01,
+        "ResistLight": 0.01,
+        "ResistDark": 0.01
+    },
+    "StarStats":
+    [
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        }
+    ],
+    "ExpTNL":
+    [
+        10,
+        20,
+        30,
+        50
+    ],
+    "SoulShardTNL":
+    [
+        10,
+        20,
+        30,
+        50
+    ],
+    "Skill":
+    {
+        "Animation":"Ultimate0",
+        "Cooldown":8,
+        "ChannelTime":3,
+        "Skills":
+        {
+            "ChainAttack":
+            {
+                "Target":
+                {
+                    "TargetEnemy":"All",
+                    "Alignment":"OnTarget"
+                },
+                "OnHitFX":"Effects/SlashParticleFX",
+                "Damage":0.0,
+                "Power":0,
+                "Health":0.2,
+                "Armor":0,
+                "Element":"PHYSICAL",
+                "Rate":0,
+                "Hits":1,
+                "Physical":1,
+                "Fire":0,
+                "Water":0,
+                "Earth":0,
+                "Light":0,
+                "Dark":0
+            },
+            "HealAlly":
+            {
+                "Target":
+                {
+                    "TargetAlly":"All",
+                    "Alignment":"OnTarget"
+                },
+                "OnHitFX":"Effects/HealFX",
+                "Damage":0,
+                "Power":0.6,
+                "Health":0,
+                "Armor":0
+            }
+        },
+        "ExternalFX":
+        [
+            {
+                "Prefab":"Effects/HolyNova",
+                "Position":
+                {
+                    "X":0,
+                    "Y":0
+                }
+            }
+        ]
+    },
+    "Passive":
+    {
+        "Skills":
+        {
+            "AttackAura":
+            {
+            }
+        }
+    },
+    "LeaderSkill":
+    {
+        "Skills":
+        {
+            "AttackAura":
+            {
+            }
+        }
+    }
+},
+{
+    "CharacterStatsID":"CStuff2",
+    "Name":"Stuff2",
+    "Description":"Desc",
+    "Role":0,
+    "BaseStats":
+    {
+        "HP": 100,
+        "Damage": 10,
+        "Power": 10,
+        "Armor": 10,
+        "Speed": 0.5,
+        "ResistFire": 0.1,
+        "ResistWater": 0.1,
+        "ResistEarth": 0.1,
+        "ResistLight": 0.1,
+        "ResistDark": 0.1
+    },
+    "BaseStatsGrow":
+    {
+        "HP": 7,
+        "Damage": 1,
+        "Power": 1,
+        "Armor": 1,
+        "Speed": 0.05,
+        "ResistFire": 0.01,
+        "ResistWater": 0.01,
+        "ResistEarth": 0.01,
+        "ResistLight": 0.01,
+        "ResistDark": 0.01
+    },
+    "BorderStats":
+    {
+        "HP": 5,
+        "Damage": 1,
+        "Power": 1,
+        "Armor": 1,
+        "Speed": 0.05,
+        "ResistFire": 0.01,
+        "ResistWater": 0.01,
+        "ResistEarth": 0.01,
+        "ResistLight": 0.01,
+        "ResistDark": 0.01
+    },
+    "StarStats":
+    [
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        }
+    ],
+    "ExpTNL":
+    [
+        10,
+        20,
+        30,
+        50
+    ],
+    "SoulShardTNL":
+    [
+        10,
+        20,
+        30,
+        50
+    ],
+    "Skill":
+    {
+        "Animation":"Ultimate0",
+        "Cooldown":8,
+        "ChannelTime":3,
+        "Skills":
+        {
+            "ChainAttack":
+            {
+                "Target":
+                {
+                    "TargetEnemy":"All",
+                    "Alignment":"OnTarget"
+                },
+                "OnHitFX":"Effects/SlashParticleFX",
+                "Damage":0.0,
+                "Power":0,
+                "Health":0.2,
+                "Armor":0,
+                "Element":"PHYSICAL",
+                "Rate":0,
+                "Hits":1,
+                "Physical":1,
+                "Fire":0,
+                "Water":0,
+                "Earth":0,
+                "Light":0,
+                "Dark":0
+            },
+            "HealAlly":
+            {
+                "Target":
+                {
+                    "TargetAlly":"All",
+                    "Alignment":"OnTarget"
+                },
+                "OnHitFX":"Effects/HealFX",
+                "Damage":0,
+                "Power":0.6,
+                "Health":0,
+                "Armor":0
+            }
+        },
+        "ExternalFX":
+        [
+            {
+                "Prefab":"Effects/HolyNova",
+                "Position":
+                {
+                    "X":0,
+                    "Y":0
+                }
+            }
+        ]
+    },
+    "Passive":
+    {
+        "Skills":
+        {
+            "AttackAura":
+            {
+            }
+        }
+    },
+    "LeaderSkill":
+    {
+        "Skills":
+        {
+            "AttackAura":
+            {
+            }
+        }
+    }
+}
+]

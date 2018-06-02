@@ -1,0 +1,153 @@
+@charset "utf-8";
+/* CSS Document */
+.swiper-container {
+    width: 167px;
+    height: 75px;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+}
+
+.red-slide {
+    background: url(https://eatigo.com/home/themes/default/images/new_bubble/bubble.svg) no-repeat;
+    text-decoration: none;
+    color: #FFF !important;
+    width: 75px !important;
+    margin-left: 7px;
+    /*
+    background-size: 100%;
+    width: 74px !important;
+    height: 74px !important;
+    margin-left: 8px;
+    margin-right: 8px;*/
+}
+
+.red-slide:hover {
+    background: url(https://eatigo.com/home/themes/default/images/new_bubble/bubble.svg) no-repeat;
+    /* text-decoration: none;
+     color: #FFF !important;
+     background-size: 100%;*/
+
+}
+
+.home-close-slide {
+    background: url(https://eatigo.com/home/themes/default/images/new_bubble/bubble_close.svg) no-repeat;
+    text-decoration: none;
+    color: #FFF !important;
+    /* background-size: 100%;*/
+    background-size: 74px 74px;
+    margin-left: 6px !important;
+}
+
+.home-close-slide.zh {
+    background: url(https://eatigo.com/home/themes/default/images/new_bubble/bubble_close_zh.svg) no-repeat;
+}
+
+.home-soldout-slide {
+    background: url(../images/index/icon_soldout.png) no-repeat;
+    text-decoration: none;
+    color: #FFF !important;
+    /* background-size: 100%;*/
+    background-size: 74px 74px;
+    margin-left: 6px !important;
+}
+
+.swiper-slide .home-slot-time {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: 10px;
+    line-height: 20px;
+}
+
+.home-slot-time {
+    margin-top: 15px !important;
+    font-size: 13px !important;
+    font-weight: normal !important;
+    font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.swiper-visible-switch {
+    background: #aaa;
+}
+
+.swiper-active-switch {
+    background: #fff;
+}
+
+.device {
+    margin-top: 38px;
+    width: 100%;
+    height: 80px;
+    /*padding: 0px 20px;*/
+    background: #FFF;
+    position: relative;
+}
+
+.device .arrow-left, .device .arrow-left2 {
+    background: url(https://eatigo.com/home/themes/default/images/new_icon_home/left.svg) no-repeat center center;
+    background-size: contain;
+    position: absolute;
+    left: 5px;
+    top: 16%;
+    margin-top: -22px;
+    width: 28px;
+    height: 95px;
+    z-index: 1;
+
+}
+
+.device .arrow-right, .device .arrow-right2 {
+    background: url(https://eatigo.com/home/themes/default/images/new_icon_home/right.svg) no-repeat center center;
+    background-size: contain;
+    position: absolute;
+    right: 5px;
+    top: 16%;
+    margin-top: -22px;
+    width: 28px;
+    height: 95px;
+}
+
+.home-slot-discount {
+    font-size: 23px !important;
+    font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    clear: both;
+    width: auto;
+    text-align: left;
+    font-weight: bold;
+    line-height: 20px;
+    margin-left: 13px;
+    float: left;
+    margin-top: -6px;
+}
+
+.home-slot-discount span {
+    float: left;
+    margin-top: -3px;
+    margin-right: 2px;
+}
+
+.home-slot-discount-pc {
+    font-size: 13px;
+    float: left;
+    display: inline block;
+    font-weight: bold;
+    margin-top: 0px;
+    width: auto;
+    height: auto;
+}
+
+.home-slot-off {
+    float: left;
+    clear: both;
+    color: #FFF;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 2px;
+    font-size: 15px !important;
+    display: none;
+    line-height: 12px;
+    font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+

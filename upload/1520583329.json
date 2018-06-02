@@ -1,0 +1,14 @@
+{ 
+  "PlayerName": "Daniel1",
+  "PlayerLevel": 5,
+  "PlayerEXP": 3,
+  "PlayerTotalEXP": 10,
+  "RegisterType": 0,
+  "SocialID":"123123",
+  "DeviceID":"2394309339sdklsdf",
+  "CreateTime":123123,
+  "LastLogin":2342342,
+  "BaseGashaClaimed":0,
+  "PremiumGashaClaimed":0,
+  "TutorialState":1
+}

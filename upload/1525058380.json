@@ -1,0 +1,670 @@
+[
+  {
+    "EquipmentStatsID":"EqStuff1",
+    "Name":"Stuff1",
+    "Description":"Desc",
+    "Cost":9001,
+    "BaseStats":
+    {
+        "HP": 0.1,
+        "Damage": 0.1,
+        "Power": 0.1,
+        "Armor": 0.1,
+        "Speed": 0.01,
+        "ResistFire": 0.01,
+        "ResistWater": 0.01,
+        "ResistEarth": 0.01,
+        "ResistLight": 0.01,
+        "ResistDark": 0.01
+    },
+    "BaseStatsGrow":
+    {
+        "HP": 7,
+        "Damage": 1,
+        "Power": 1,
+        "Armor": 1,
+        "Speed": 0.05,
+        "ResistFire": 0.01,
+        "ResistWater": 0.01,
+        "ResistEarth": 0.01,
+        "ResistLight": 0.01,
+        "ResistDark": 0.01
+    },
+    "StarStats":
+    [
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        }
+    ],
+    "ExpTNL":
+    [
+        10,
+        20,
+        30,
+        50
+    ],
+    "StarRuneRequirement":
+    [
+        
+            {
+                "RuneID":"RUNE_1",
+                "Quantity":2
+            }
+        ,
+        
+            {
+                "RuneID":"MANTLE_1",
+                "Quantity":1
+            },
+            {
+                "RuneID":"MONSTER_BONE",
+                "Quantity":4
+            }
+        
+    ],
+    "Skill":
+    {
+        "Animation":"Cast0",
+        "Cooldown":8,
+        "ChannelTime":3,
+        "Skills":
+        [
+            {
+                "ChainAttack":
+                {
+                    "Target":
+                    {
+                        "TargetEnemy":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/SlashParticleFX",
+                    "Damage":0.0,
+                    "Power":0,
+                    "Health":0.2,
+                    "Armor":0,
+                    "Element":"PHYSICAL",
+                    "Rate":0,
+                    "Hits":1,
+                    "Physical":1,
+                    "Fire":0,
+                    "Water":0,
+                    "Earth":0,
+                    "Light":0,
+                    "Dark":0
+                },
+                "HealAlly":
+                {
+                    "Target":
+                    {
+                        "TargetAlly":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/HealFX",
+                    "Damage":0,
+                    "Power":0.6,
+                    "Health":0,
+                    "Armor":0
+                }
+            },
+            {
+                "ChainAttack":
+                {
+                    "Target":
+                    {
+                        "TargetEnemy":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/SlashParticleFX",
+                    "Damage":0.0,
+                    "Power":0,
+                    "Health":0.2,
+                    "Armor":0,
+                    "Element":"PHYSICAL",
+                    "Rate":0,
+                    "Hits":1,
+                    "Physical":1,
+                    "Fire":0,
+                    "Water":0,
+                    "Earth":0,
+                    "Light":0,
+                    "Dark":0
+                },
+                "HealAlly":
+                {
+                    "Target":
+                    {
+                        "TargetAlly":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/HealFX",
+                    "Damage":0,
+                    "Power":0.6,
+                    "Health":0,
+                    "Armor":0
+                }
+            },
+            {
+                "ChainAttack":
+                {
+                    "Target":
+                    {
+                        "TargetEnemy":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/SlashParticleFX",
+                    "Damage":0.0,
+                    "Power":0,
+                    "Health":0.2,
+                    "Armor":0,
+                    "Element":"PHYSICAL",
+                    "Rate":0,
+                    "Hits":1,
+                    "Physical":1,
+                    "Fire":0,
+                    "Water":0,
+                    "Earth":0,
+                    "Light":0,
+                    "Dark":0
+                },
+                "HealAlly":
+                {
+                    "Target":
+                    {
+                        "TargetAlly":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/HealFX",
+                    "Damage":0,
+                    "Power":0.6,
+                    "Health":0,
+                    "Armor":0
+                }
+            },
+            {
+                "ChainAttack":
+                {
+                    "Target":
+                    {
+                        "TargetEnemy":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/SlashParticleFX",
+                    "Damage":0.0,
+                    "Power":0,
+                    "Health":0.2,
+                    "Armor":0,
+                    "Element":"PHYSICAL",
+                    "Rate":0,
+                    "Hits":1,
+                    "Physical":1,
+                    "Fire":0,
+                    "Water":0,
+                    "Earth":0,
+                    "Light":0,
+                    "Dark":0
+                },
+                "HealAlly":
+                {
+                    "Target":
+                    {
+                        "TargetAlly":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/HealFX",
+                    "Damage":0,
+                    "Power":0.6,
+                    "Health":0,
+                    "Armor":0
+                }
+            },
+            {
+                "ChainAttack":
+                {
+                    "Target":
+                    {
+                        "TargetEnemy":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/SlashParticleFX",
+                    "Damage":0.0,
+                    "Power":0,
+                    "Health":0.2,
+                    "Armor":0,
+                    "Element":"PHYSICAL",
+                    "Rate":0,
+                    "Hits":1,
+                    "Physical":1,
+                    "Fire":0,
+                    "Water":0,
+                    "Earth":0,
+                    "Light":0,
+                    "Dark":0
+                },
+                "HealAlly":
+                {
+                    "Target":
+                    {
+                        "TargetAlly":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/HealFX",
+                    "Damage":0,
+                    "Power":0.6,
+                    "Health":0,
+                    "Armor":0
+                }
+            }
+        ],
+        "ExternalFX":
+        [
+            {
+                "Prefab":"Effects/HolyNova",
+                "Position":
+                {
+                    "X":0,
+                    "Y":0
+                }
+            }
+        ]
+    },
+    "SkillDescription":"Desc",
+    "SkillTNL":
+    [
+        10,
+        20,
+        30,
+        50
+    ]
+},
+ {
+    "EquipmentStatsID":"EqStuff2",
+    "Name":"Stuff2",
+    "Description":"Desc",
+    "Cost":9001,
+    "BaseStats":
+    {
+        "HP": 0.1,
+        "Damage": 0.1,
+        "Power": 0.1,
+        "Armor": 0.1,
+        "Speed": 0.01,
+        "ResistFire": 0.01,
+        "ResistWater": 0.01,
+        "ResistEarth": 0.01,
+        "ResistLight": 0.01,
+        "ResistDark": 0.01
+    },
+    "BaseStatsGrow":
+    {
+        "HP": 7,
+        "Damage": 1,
+        "Power": 1,
+        "Armor": 1,
+        "Speed": 0.05,
+        "ResistFire": 0.01,
+        "ResistWater": 0.01,
+        "ResistEarth": 0.01,
+        "ResistLight": 0.01,
+        "ResistDark": 0.01
+    },
+    "StarStats":
+    [
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        },
+        {
+            "HP": 5,
+            "Damage": 1,
+            "Power": 1,
+            "Armor": 1,
+            "Speed": 0.05,
+            "ResistFire": 0.01,
+            "ResistWater": 0.01,
+            "ResistEarth": 0.01,
+            "ResistLight": 0.01,
+            "ResistDark": 0.01
+        }
+    ],
+    "ExpTNL":
+    [
+        10,
+        20,
+        30,
+        50
+    ],
+    "StarRuneRequirement":
+    [
+        
+            {
+                "RuneID":"RUNE_1",
+                "Quantity":2
+            }
+        ,
+        
+            {
+                "RuneID":"MANTLE_1",
+                "Quantity":1
+            },
+            {
+                "RuneID":"MONSTER_BONE",
+                "Quantity":4
+            }
+        
+    ],
+    "Skill":
+    {
+        "Animation":"Cast0",
+        "Cooldown":8,
+        "ChannelTime":3,
+        "Skills":
+        [
+            {
+                "ChainAttack":
+                {
+                    "Target":
+                    {
+                        "TargetEnemy":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/SlashParticleFX",
+                    "Damage":0.0,
+                    "Power":0,
+                    "Health":0.2,
+                    "Armor":0,
+                    "Element":"PHYSICAL",
+                    "Rate":0,
+                    "Hits":1,
+                    "Physical":1,
+                    "Fire":0,
+                    "Water":0,
+                    "Earth":0,
+                    "Light":0,
+                    "Dark":0
+                },
+                "HealAlly":
+                {
+                    "Target":
+                    {
+                        "TargetAlly":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/HealFX",
+                    "Damage":0,
+                    "Power":0.6,
+                    "Health":0,
+                    "Armor":0
+                }
+            },
+            {
+                "ChainAttack":
+                {
+                    "Target":
+                    {
+                        "TargetEnemy":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/SlashParticleFX",
+                    "Damage":0.0,
+                    "Power":0,
+                    "Health":0.2,
+                    "Armor":0,
+                    "Element":"PHYSICAL",
+                    "Rate":0,
+                    "Hits":1,
+                    "Physical":1,
+                    "Fire":0,
+                    "Water":0,
+                    "Earth":0,
+                    "Light":0,
+                    "Dark":0
+                },
+                "HealAlly":
+                {
+                    "Target":
+                    {
+                        "TargetAlly":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/HealFX",
+                    "Damage":0,
+                    "Power":0.6,
+                    "Health":0,
+                    "Armor":0
+                }
+            },
+            {
+                "ChainAttack":
+                {
+                    "Target":
+                    {
+                        "TargetEnemy":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/SlashParticleFX",
+                    "Damage":0.0,
+                    "Power":0,
+                    "Health":0.2,
+                    "Armor":0,
+                    "Element":"PHYSICAL",
+                    "Rate":0,
+                    "Hits":1,
+                    "Physical":1,
+                    "Fire":0,
+                    "Water":0,
+                    "Earth":0,
+                    "Light":0,
+                    "Dark":0
+                },
+                "HealAlly":
+                {
+                    "Target":
+                    {
+                        "TargetAlly":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/HealFX",
+                    "Damage":0,
+                    "Power":0.6,
+                    "Health":0,
+                    "Armor":0
+                }
+            },
+            {
+                "ChainAttack":
+                {
+                    "Target":
+                    {
+                        "TargetEnemy":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/SlashParticleFX",
+                    "Damage":0.0,
+                    "Power":0,
+                    "Health":0.2,
+                    "Armor":0,
+                    "Element":"PHYSICAL",
+                    "Rate":0,
+                    "Hits":1,
+                    "Physical":1,
+                    "Fire":0,
+                    "Water":0,
+                    "Earth":0,
+                    "Light":0,
+                    "Dark":0
+                },
+                "HealAlly":
+                {
+                    "Target":
+                    {
+                        "TargetAlly":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/HealFX",
+                    "Damage":0,
+                    "Power":0.6,
+                    "Health":0,
+                    "Armor":0
+                }
+            },
+            {
+                "ChainAttack":
+                {
+                    "Target":
+                    {
+                        "TargetEnemy":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/SlashParticleFX",
+                    "Damage":0.0,
+                    "Power":0,
+                    "Health":0.2,
+                    "Armor":0,
+                    "Element":"PHYSICAL",
+                    "Rate":0,
+                    "Hits":1,
+                    "Physical":1,
+                    "Fire":0,
+                    "Water":0,
+                    "Earth":0,
+                    "Light":0,
+                    "Dark":0
+                },
+                "HealAlly":
+                {
+                    "Target":
+                    {
+                        "TargetAlly":"All",
+                        "Alignment":"OnTarget"
+                    },
+                    "OnHitFX":"Effects/HealFX",
+                    "Damage":0,
+                    "Power":0.6,
+                    "Health":0,
+                    "Armor":0
+                }
+            }
+        ],
+        "ExternalFX":
+        [
+            {
+                "Prefab":"Effects/HolyNova",
+                "Position":
+                {
+                    "X":0,
+                    "Y":0
+                }
+            }
+        ]
+    },
+    "SkillDescription":"Desc",
+    "SkillTNL":
+    [
+        10,
+        20,
+        30,
+        50
+    ]
+}
+]

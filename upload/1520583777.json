@@ -1,0 +1,9 @@
+{
+    "Meat": 1,
+    "Gold": 2,
+    "Gem": 3,
+    "PvP Ticket": 4,
+    "Skip Ticket":5,
+    "PvP Token":6,
+    "Guild Token":7
+}

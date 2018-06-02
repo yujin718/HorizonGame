@@ -1,0 +1,32 @@
+[ 
+  {
+    "EquipmentID":"test1",
+    "EquipmentStatsID":"CharIDStuff",
+    "CharacterID":"cha1",
+    "Star": 4,
+    "SkillLevel":3,
+    "Level": 3,
+    "EXP": 1,
+    "TotalExp": 2
+  },
+  {
+    "EquipmentID":"test2",
+    "EquipmentStatsID":"CharIDStuff",
+    "CharacterID":"cha2",
+    "Star": 4,
+    "SkillLevel":3,
+    "Level": 3,
+    "EXP": 1,
+    "TotalExp": 2
+  },
+  {
+    "EquipmentID":"test3",
+    "EquipmentStatsID":"CharIDStuff",
+    "CharacterID":"cha1",
+    "Star": 4,
+    "SkillLevel":3,
+    "Level": 3,
+    "EXP": 1,
+    "TotalExp": 2
+  }
+]

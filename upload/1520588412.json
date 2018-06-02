@@ -1,0 +1,41 @@
+[ 
+  {
+    "EXP": 1,
+    "TotalExp": 2,
+    "Level": 3,
+    "Star": 4,
+    "Border": 5,
+    "EquipmentSlot1": 1,
+    "EquipmentSlot2": 1,
+    "EquipmentSlot3": 1,
+    "CharacterID":"cha1",
+    "CharacterStatsID":"CharIDStuff",
+    "ServerRefID": 1
+  },
+  {
+    "EXP": 1,
+    "TotalExp": 2,
+    "Level": 3,
+    "Star": 4,
+    "Border": 5,
+    "EquipmentSlot1": 1,
+    "EquipmentSlot2": 1,
+    "EquipmentSlot3": 1,
+    "CharacterID":"cha2",
+    "CharacterStatsID":"CharIDStuff",
+    "ServerRefID": 1
+  },
+  {
+    "EXP": 1,
+    "TotalExp": 2,
+    "Level": 3,
+    "Star": 4,
+    "Border": 5,
+    "EquipmentSlot1": 1,
+    "EquipmentSlot2": 1,
+    "EquipmentSlot3": 1,
+    "CharacterID":"cha3",
+    "CharacterStatsID":"CharIDStuff",
+    "ServerRefID": 1
+  }
+]

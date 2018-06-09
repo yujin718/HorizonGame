@@ -578,25 +578,36 @@ class WebserviceController extends BaseController {
                 "CharacterID" => $characterID));
         }
     }
-    
+
     //5 Weeks Character Star
-    public function updateCharacterStar($playerId,$characterID) {
-        
+    public function updateCharacterStar($playerId, $characterID) {
+
         if (!$this->sqllibs->isExist($this->db, 'tbl_user_character', array("CharacterID" => $characterID, "PlayerID" => $playerId))) {
             return;
         }
         $chInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_character', array('CharacterID' => $characterID));
-        $globalInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_global', array('no' => 1));
-        $chLevel = $chInfo->Level;
-        $expLevels = json_decode($globalInfo->CharacterExpTNL);
-        if ($expLevels[$chLevel] < $chInfo->CurrentExp) {
-            $chLevel++;
-            $chCurrentExp = $chInfo->CurrentExp - $expLevels[$chLevel];
-            $this->sqllibs->updateRow($this->db, 'tbl_user_character', array(
-                "CurrentExp" => $chCurrentExp,
-                "Level" => $chLevel,
-                    ), array(
-                "CharacterID" => $characterID));
+        $chStatId = $chInfo->CharacterStatsID;
+        $playerInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('PlayerID' => $playerId));
+        $soulShards = json_decode($playerInfo->SoulShard);
+        foreach ($soulShards as $sInfo) {
+            $soulInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_soulshards', array('no' => $sInfo));
+            $statInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_character', array('CharacterStatsID' => $soulInfo->CharacterStatsID));
+            $reqSoulShards = json_decode($statInfo->SoulshardTNL);
+            for ($i = 1; $i < count($reqSoulShards) + 1; $i++) {
+                if (($reqSoulShards[$i] <= $soulInfo->Quantity) && ($chInfo->Star < $i)) {
+                    $this->sqllibs->updateRow($this->db, 'tbl_user_character', array(
+                        "Star" => $chInfo->Star + 1,
+                            ), array(
+                        "CharacterID" => $characterID));
+                    $this->sqllibs->updateRow($this->db, 'tbl_user_soulshards', array(
+                        "Quantity" => $soulInfo->Quantity - $reqSoulShards[$i],
+                            ), array(
+                        "no" => $soulInfo->no));
+                    $chInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_character', array('CharacterID' => $characterID));
+                    $result['character'] = $chInfo;
+                    echo json_encode($result, JSON_NUMERIC_CHECK);
+                }
+            }
         }
     }
 

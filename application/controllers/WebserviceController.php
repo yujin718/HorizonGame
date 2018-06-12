@@ -67,6 +67,62 @@ class WebserviceController extends BaseController {
         $userData = $this->sqllibs->getOneRow($this->db, 'tbl_user', array(
             "PlayerID" => $id,
         ));
+
+        //Create Default 4 Character
+        $baseStarter = $this->sqllibs->getOneRow($this->db, 'tbl_base_starters_param', array("no" => 1));
+        $defaultChIds = json_decode($baseStarter->CharacterIDs);
+        foreach ($defaultChIds as $chId) {
+            $createdId = $this->sqllibs->insertRow($this->db, 'tbl_user_character', array(
+                "CharacterStatsID" => $chId,
+                "PlayerID" => $id,
+                "CurrentExp" => 0,
+                "Star" => 1,
+                "Border" => 0,
+                "TotalExp" => 0,
+                "Level" => 1,
+                "Equipment1" => "",
+                "Equipment2" => "",
+                "Equipment3" => ""
+            ));
+        }
+        $defaultEquips = json_decode($baseStarter->EquipmentIDs);
+        foreach ($defaultEquips as $eqId) {
+            $createdId = $this->sqllibs->insertRow($this->db, 'tbl_user_equip', array(
+                "EquipmentStatsID" => $eqId,
+                "PlayerID" => $id,
+                "Level" => 1,
+                "Star" => 1,
+                "SkillLevel" => 1,
+                "CurrentExp" => 0,
+                "TotalExp" => 0,
+                "TotalSkillExp" => 0
+            ));
+        }
+        //Set Meat Gold,Gem
+        $meatId = $this->sqllibs->insertRow($this->db, 'tbl_user_currency', array(
+            "uid" => $id, "cid" => 1, "amount" => $baseStarter->Meat
+        ));
+        $goldId = $this->sqllibs->insertRow($this->db, 'tbl_user_currency', array(
+            "uid" => $id, "cid" => 2, "amount" => $baseStarter->Gold
+        ));
+        $gemId = $this->sqllibs->insertRow($this->db, 'tbl_user_currency', array(
+            "uid" => $id, "cid" => 4, "amount" => $baseStarter->Gem
+        ));
+
+        //Create Random Chracter
+        $randomInfo = $this->sqllibs->rawSelectSql($this->db, "SELECT * FROM tbl_base_tut_character_pool ORDER BY RAND() % 3 LIMIT 1");
+        $createdId = $this->sqllibs->insertRow($this->db, 'tbl_user_character', array(
+            "CharacterStatsID" => $randomInfo->CharacterID,
+            "PlayerID" => $id,
+            "CurrentExp" => 0,
+            "Star" => 1,
+            "Border" => 0,
+            "TotalExp" => 0,
+            "Level" => 1,
+            "Equipment1" => "",
+            "Equipment2" => "",
+            "Equipment3" => ""
+        ));
         $result = array();
         unset($userData->Password);
         $result['user'] = $userData;
@@ -176,7 +232,7 @@ class WebserviceController extends BaseController {
             }
             if ($stageInfo->Tries > $triesNumber) {
 
-                //Verify Character With Player ID
+//Verify Character With Player ID
                 $arrayCharacter = json_decode($postVars['characterIds']);
                 foreach ($arrayCharacter as $cid) {
                     if (!$this->sqllibs->isExist($this->db, 'tbl_user_character', array('PlayerID' => $postVars['userId'], 'CharacterID' => $cid))) {
@@ -190,13 +246,13 @@ class WebserviceController extends BaseController {
                 $result['message'] = "Player tried over limit";
                 $result['result'] = 400;
             }
-            //
+//
             $stageProgressionJson = $userInfo->StageProgression;
             $this->sqllibs->updateRow($this->db, 'tbl_user', array(
                 "Party" => $postVars['characterIds'],
                     ), array(
                 "PlayerID" => $userInfo->PlayerID));
-            //Minus
+//Minus
             if ($stageProgressionInfo == null) {
                 $this->sqllibs->insertRow($this->db, 'tbl_user_stage', array(
                     "StageID" => $postVars['stageId'],
@@ -484,7 +540,7 @@ class WebserviceController extends BaseController {
     }
 
     public function currencyRecharge($userId) {
-        //meat cap = initial meat value + (player level * meat growth)
+//meat cap = initial meat value + (player level * meat growth)
         $date = new DateTime();
         $meatHistoryCurrency = $this->sqllibs->rawSelectSql($this->db, "select * from tbl_history_charge_currency where uid='" . $userId . "' and currency ='1' order by timestamp desc");
         $ticketHistoryCurrency = $this->sqllibs->rawSelectSql($this->db, "select * from tbl_history_charge_currency where uid='" . $userId . "' and currency ='6' order by timestamp desc");
@@ -609,6 +665,115 @@ class WebserviceController extends BaseController {
                 }
             }
         }
+    }
+
+    //5 Weeks Character Border
+    public function updateCharacterBorder($playerId, $characterID) {
+
+        if (!$this->sqllibs->isExist($this->db, 'tbl_user_character', array("CharacterID" => $characterID, "PlayerID" => $playerId))) {
+            return;
+        }
+        $chInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_character', array('CharacterID' => $characterID, "PlayerID" => $playerId));
+        $chStatId = $chInfo->CharacterStatsID;
+        $playerInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('PlayerID' => $playerId));
+        $statInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_character', array('CharacterStatsID' => $chStatId->CharacterStatsID));
+        $borderReqs = $statInfos->BorderRequirement;
+        $reqIds = json_decode($borderReqs);
+        foreach ($reqIds as $req) {
+            $userItemData = $this->sqllibs->getOneRow($this->db, 'tbl_user_inventory', array('PlayerID' => $playerId, 'ItemID' => $req));
+            $reqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_orb_requirement', array('OrbID' => $req));
+            if ($userItemData == null) {
+                $result['result'] = 400;
+                $result['message'] = "Failure";
+                echo json_encode($result, JSON_NUMERIC_CHECK);
+                return;
+            }
+            if ($userItemData->Quantity < $reqInfo->Quantity) {
+                $result['result'] = 400;
+                $result['message'] = "Failure";
+                echo json_encode($result, JSON_NUMERIC_CHECK);
+                return;
+            }
+        }
+        foreach ($reqIds as $req) {
+            $this->sqllibs->updateRow($this->db, 'tbl_user_inventory', array(
+                "Quantity" => $userItemData->Quantity - $reqInfo->Quantity,
+                    ), array(
+                "no" => $userItemData->$characterID));
+        }
+        $chInfo->Border = $chInfo->Border + 1;
+        $this->sqllibs->updateRow($this->db, 'tbl_user_character', array(
+            "Border" => $chInfo->Border,
+                ), array(
+            "no" => $chInfo->no));
+        $result['result'] = 200;
+        $result['message'] = "Success";
+        $result['character'] = $chInfo;
+        echo json_encode($result, JSON_NUMERIC_CHECK);
+        return;
+    }
+
+    //5 Weeks Equipment Level
+    public function updateEquipLevel($equipId) {
+        $eqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_equip', array('EquipmentID' => $equipId,));
+        $globalInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_global', array('no' => 1));
+        $expLevel = $eqInfo->Level;
+        $expLevels = json_decode($globalInfo->EquipmentExpTNL);
+        if ($expLevels[$expLevel] < $eqInfo->CurrentExp) {
+            $expLevel++;
+            $eqCurrentExp = $eqInfo->CurrentExp - $expLevels[$expLevel];
+            $this->sqllibs->updateRow($this->db, 'tbl_user_equip', array(
+                "CurrentExp" => $eqCurrentExp,
+                "Level" => $expLevel,
+                    ), array(
+                "EquipmentID" => $equipId));
+        }
+    }
+
+    //5 Week Equipment Star
+    public function updateEquipStar($playerId, $equipId) {
+
+        if (!$this->sqllibs->isExist($this->db, 'tbl_user_equip', array("EquipmentID" => $equipId, "PlayerID" => $playerId))) {
+            return;
+        }
+        $eqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_equip', array('EquipmentID' => $equipId));
+        $eqStatId = $eqInfo->EquipmentStatsID;
+        $playerInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('PlayerID' => $playerId));
+        $statInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_character', array('CharacterStatsID' => $chStatId->CharacterStatsID));
+        $runeReqs = $statInfos->StarRuneRequirement;
+        $runeIds = json_decode($runeReqs);
+        foreach ($runeIds as $runeId) {
+            $userItemData = $this->sqllibs->getOneRow($this->db, 'tbl_user_inventory', array('PlayerID' => $playerId, 'ItemID' => $runeId));
+            $reqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_rune_requirement', array('RuneID' => $runeId));
+            if ($userItemData == null) {
+                $result['result'] = 400;
+                $result['message'] = "Failure";
+                echo json_encode($result, JSON_NUMERIC_CHECK);
+                return;
+            }
+            if ($userItemData->Quantity < $reqInfo->Quantity) {
+                $result['result'] = 400;
+                $result['message'] = "Failure";
+                echo json_encode($result, JSON_NUMERIC_CHECK);
+                return;
+            }
+        }
+        foreach ($reqIds as $req) {
+            $this->sqllibs->updateRow($this->db, 'tbl_user_inventory', array(
+                "Quantity" => $userItemData->Quantity - $reqInfo->Quantity,
+                    ), array(
+                "no" => $userItemData->no));
+        }
+        $eqInfo->Border = $eqInfo->Border + 1;
+        $this->sqllibs->updateRow($this->db, 'tbl_user_equip', array(
+            "Star" => $eqInfo->Star,
+                ), array(
+            "no" => $eqInfo->EquipmentID));
+        $result['result'] = 200;
+        $result['message'] = "Success";
+        $result['equip'] = $eqInfo;
+        echo json_encode($result, JSON_NUMERIC_CHECK);
+        return;
     }
 
 }

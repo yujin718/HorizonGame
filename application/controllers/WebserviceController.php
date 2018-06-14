@@ -404,10 +404,10 @@ class WebserviceController extends BaseController {
                     $baseState = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->BaseStats));
                     $baseGrow = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->BaseStatsGrow));
                     $border = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->BorderStats));
-                    $starIds = $this->sqllibs->selectAllRows($this->db, 'tbl_base_starstats', array("data_id" => $ch->CharacterStatsID, "type" => '0'));
+                    $starIds = json_decode($ch->StarStats);
                     $starArray = array();
                     foreach ($starIds as $starInfo) {
-                        $stInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $starInfo->stats_id));
+                        $stInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $starInfo));
                         $starArray[] = $stInfo;
                     }
                     $extended = (object) array_merge((array) $ch, array(
@@ -426,10 +426,10 @@ class WebserviceController extends BaseController {
                 foreach ($equips as $eq) {
                     $baseState = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $eq->BaseStats));
                     $baseGrow = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $eq->BaseStatsGrow));
-                    $starIds = $this->sqllibs->selectAllRows($this->db, 'tbl_base_starstats', array("data_id" => $eq->EquipmentStateID, "type" => '1'));
+                    $starIds = json_decode($eq->StarStats);
                     $starArray = array();
                     foreach ($starIds as $starInfo) {
-                        $stInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $starInfo->stats_id));
+                        $stInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $starInfo));
                         $starArray[] = $stInfo;
                     }
                     $extended = (object) array_merge((array) $eq, array(

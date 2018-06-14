@@ -24,6 +24,12 @@ class WebserviceController extends BaseController {
 
     public function login() {
         $postVars = $this->utils->inflatePost(array('email', 'password'));
+        if ($postVars == false) {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
         $result = array();
         if ($this->sqllibs->isExist($this->db, 'tbl_user', array("Email" => $postVars['email'], "Password" => $postVars['password']))) {
             $userData = $this->sqllibs->getOneRow($this->db, 'tbl_user', array(
@@ -42,7 +48,13 @@ class WebserviceController extends BaseController {
 
     public function register() {
         $postVars = $this->utils->inflatePost(array('name', 'email', 'password', 'device_type'));
-        if ($this->sqllibs->isExist($this->db, 'tbl_user', array("Email" => $postVars['email']))) {
+        if ($postVars == false) {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if ($this->sqllibs->isExist($this->db, 'tbl_user', array("Email" => trim($postVars['email'])))) {
             $result['result'] = 400;
             $result['message'] = "Email already registered";
             echo json_encode($result, JSON_NUMERIC_CHECK);
@@ -71,6 +83,7 @@ class WebserviceController extends BaseController {
         //Create Default 4 Character
         $baseStarter = $this->sqllibs->getOneRow($this->db, 'tbl_base_starters_param', array("no" => 1));
         $defaultChIds = json_decode($baseStarter->CharacterIDs);
+        $partyIds = array();
         foreach ($defaultChIds as $chId) {
             $createdId = $this->sqllibs->insertRow($this->db, 'tbl_user_character', array(
                 "CharacterStatsID" => $chId,
@@ -84,6 +97,7 @@ class WebserviceController extends BaseController {
                 "Equipment2" => "",
                 "Equipment3" => ""
             ));
+            $partyIds[] = $createdId;
         }
         $defaultEquips = json_decode($baseStarter->EquipmentIDs);
         foreach ($defaultEquips as $eqId) {
@@ -112,7 +126,7 @@ class WebserviceController extends BaseController {
         //Create Random Chracter
         $randomInfo = $this->sqllibs->rawSelectSql($this->db, "SELECT * FROM tbl_base_tut_character_pool ORDER BY RAND() % 3 LIMIT 1");
         $createdId = $this->sqllibs->insertRow($this->db, 'tbl_user_character', array(
-            "CharacterStatsID" => $randomInfo->CharacterID,
+            "CharacterStatsID" => $randomInfo[0]->CharacterID,
             "PlayerID" => $id,
             "CurrentExp" => 0,
             "Star" => 1,
@@ -123,6 +137,14 @@ class WebserviceController extends BaseController {
             "Equipment2" => "",
             "Equipment3" => ""
         ));
+        $partyIds[] = $createdId;
+
+        $userData->Party = json_encode($partyIds, JSON_NUMERIC_CHECK);
+        $this->sqllibs->updateRow($this->db, 'tbl_user', array(
+            "Party" => $userData->Party,
+                ), array(
+            "PlayerID" => $userData->PlayerID));
+
         $result = array();
         unset($userData->Password);
         $result['user'] = $userData;
@@ -206,10 +228,16 @@ class WebserviceController extends BaseController {
     public function preBattleService() {
         $result = array();
         $postVars = $this->utils->inflatePost(array('userId', 'characterIds', 'stageId'));
+        if ($postVars == false) {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
         $stageInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stage', array("StageID" => $postVars['stageId']));
         $userMeat = $this->sqllibs->getOneRow($this->db, 'tbl_user_currency', array("uid" => $postVars['userId'], "cid" => 1));
         $userInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array("PlayerID" => $postVars['userId']));
-        $stageProgressionInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_stage', array("StageID" => $postVars['stageId'], "user_id" => $postVars['userId']));
+        $stageProgressionInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_stage', array("StageID" => $postVars['stageId'], "PlayerID" => $postVars['userId']));
 
         $requireStages = json_decode($stageInfo->StageRequirement);
         $isStageClear = false;
@@ -227,8 +255,14 @@ class WebserviceController extends BaseController {
         }
         if ($userMeat->amount > $stageInfo->MeatRequirement) {
             $triesNumber = 0;
-            if ($stageProgressionInfo != null) {
-                $triesNumber = $stageProgressionInfo->TriesNumber;
+            if ($stageProgressionInfo != null) {                
+                $triesNumber = $stageProgressionInfo->DailyTries;
+                $date = new DateTime();
+                $currentTimeStamp = $date->getTimestamp();
+                if ($stageProgressionInfo->Last_Try_Day_Timestamp + 24 * 3600 < $currentTimeStamp)
+                {
+                    $triesNumber = 0;                    
+                }
             }
             if ($stageInfo->Tries > $triesNumber) {
 
@@ -253,16 +287,26 @@ class WebserviceController extends BaseController {
                     ), array(
                 "PlayerID" => $userInfo->PlayerID));
 //Minus
-            if ($stageProgressionInfo == null) {
+            $date = new DateTime();
+            $date->setTime(0, 0, 0);
+            $timeStamp = $date->getTimestamp();
+            if ($stageProgressionInfo == null) {                
                 $this->sqllibs->insertRow($this->db, 'tbl_user_stage', array(
+                    
                     "StageID" => $postVars['stageId'],
                     "StarAcquired" => 0,
-                    "TriesNumber" => 1
+                    "TriesNumber" => 1,
+                    "DailyTries" => 1,
+                    "Last_Try_Day_Timestamp" => $timeStamp,
+                    "PlayerID" => $userInfo->PlayerID
                 ));
             } else {
                 $tryNumber = $stageProgressionInfo->TriesNumber + 1;
+                $triesNumber++;
                 $this->sqllibs->updateRow($this->db, 'tbl_user_stage', array(
                     "TriesNumber" => $tryNumber,
+                    "DailyTries" => $triesNumber,
+                    "Last_Try_Day_Timestamp" => $timeStamp
                         ), array(
                     "no" => $stageProgressionInfo->StageProgressionID));
             }
@@ -290,6 +334,12 @@ class WebserviceController extends BaseController {
 
     public function postBattleService() {
         $postVars = $this->utils->inflatePost(array('userId', 'stageId', 'star'));
+        if ($postVars == false) {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
         $stageProgressionInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_stage', array("StageID" => $postVars['stageId'], "user_id" => $postVars['userId']));
         if ($stageProgressionInfo == null) {
             $this->sqllibs->insertRow($this->db, 'tbl_user_stage', array(

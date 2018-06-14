@@ -28,6 +28,7 @@ class Utils
                 $result[$field] = $_POST[$field];
             } else {
                 $result[$field] = array();
+				return false;
             }
         }
         return $result;

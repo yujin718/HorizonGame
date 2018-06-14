@@ -255,13 +255,12 @@ class WebserviceController extends BaseController {
         }
         if ($userMeat->amount > $stageInfo->MeatRequirement) {
             $triesNumber = 0;
-            if ($stageProgressionInfo != null) {                
+            if ($stageProgressionInfo != null) {
                 $triesNumber = $stageProgressionInfo->DailyTries;
                 $date = new DateTime();
                 $currentTimeStamp = $date->getTimestamp();
-                if ($stageProgressionInfo->Last_Try_Day_Timestamp + 24 * 3600 < $currentTimeStamp)
-                {
-                    $triesNumber = 0;                    
+                if ($stageProgressionInfo->Last_Try_Day_Timestamp + 24 * 3600 < $currentTimeStamp) {
+                    $triesNumber = 0;
                 }
             }
             if ($stageInfo->Tries > $triesNumber) {
@@ -290,9 +289,8 @@ class WebserviceController extends BaseController {
             $date = new DateTime();
             $date->setTime(0, 0, 0);
             $timeStamp = $date->getTimestamp();
-            if ($stageProgressionInfo == null) {                
+            if ($stageProgressionInfo == null) {
                 $this->sqllibs->insertRow($this->db, 'tbl_user_stage', array(
-                    
                     "StageID" => $postVars['stageId'],
                     "StarAcquired" => 0,
                     "TriesNumber" => 1,
@@ -308,7 +306,7 @@ class WebserviceController extends BaseController {
                     "DailyTries" => $triesNumber,
                     "Last_Try_Day_Timestamp" => $timeStamp
                         ), array(
-                    "no" => $stageProgressionInfo->StageProgressionID));
+                    "StageProgressionID" => $stageProgressionInfo->StageProgressionID));
             }
             $meat = $userMeat->amount - $stageInfo->MeatRequirement;
             $this->sqllibs->updateRow($this->db, 'tbl_user_currency', array(
@@ -318,10 +316,25 @@ class WebserviceController extends BaseController {
             $ids = json_decode($postVars['characterIds']);
             $characterArray = array();
             foreach ($ids as $id) {
-                $info = $this->sqllibs->rawSelectSql($this->db, "select * from tbl_user_character as A left join tbl_base_character as B on A.CharacterStatsID=B.CharacterStatsID where A.CharacterID='" . $id . "'");
-                if (count($info) > 0) {
-                    $characterArray[] = $info[0];
+                $chInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_character', array("CharacterID" => $id));
+                $ch = $this->sqllibs->getOneRow($this->db, "tbl_base_character", array("CharacterStatsID" => $chInfo->CharacterStatsID));
+                $baseState = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->BaseStats));
+                $baseGrow = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->BaseStatsGrow));
+                $border = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->BorderStats));
+                $starIds = $this->sqllibs->selectAllRows($this->db, 'tbl_base_starstats', array("data_id" => $ch->CharacterStatsID, "type" => '0'));
+                $starArray = array();
+                foreach ($starIds as $starInfo) {
+                    $stInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $starInfo->stats_id));
+                    $starArray[] = $stInfo;
                 }
+                $extended = (object) array_merge((array) $ch, array(
+                            'BaseStats' => $baseState,
+                            'BaseStatsGrow' => $baseGrow,
+                            'BorderStats' => $border,
+                            'StarStats' => $starArray,
+                ));
+                $chInfo->CharacterStats = $extended;
+                $characterArray[] = $chInfo;
             }
             $result['characters'] = $characterArray;
             $result['result'] = 200;
@@ -765,7 +778,7 @@ class WebserviceController extends BaseController {
 
     //5 Weeks Equipment Level
     public function updateEquipLevel($equipId) {
-        $eqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_equip', array('EquipmentID' => $equipId,));
+        $eqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_equip', array('EquipmentID' => $equipId));
         $globalInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_global', array('no' => 1));
         $expLevel = $eqInfo->Level;
         $expLevels = json_decode($globalInfo->EquipmentExpTNL);
@@ -789,7 +802,7 @@ class WebserviceController extends BaseController {
         $eqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_equip', array('EquipmentID' => $equipId));
         $eqStatId = $eqInfo->EquipmentStatsID;
         $playerInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('PlayerID' => $playerId));
-        $statInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_character', array('CharacterStatsID' => $chStatId->CharacterStatsID));
+        $statInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_equip', array('EquipmentStateID' => $eqStatId));
         $runeReqs = $statInfos->StarRuneRequirement;
         $runeIds = json_decode($runeReqs);
         foreach ($runeIds as $runeId) {
@@ -822,6 +835,56 @@ class WebserviceController extends BaseController {
         $result['result'] = 200;
         $result['message'] = "Success";
         $result['equip'] = $eqInfo;
+        echo json_encode($result, JSON_NUMERIC_CHECK);
+        return;
+    }
+
+    //5 Week Equipment Skill Level
+    public function updateEquipSkillLevel($playerId, $equipId) {
+
+        $eqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_equip', array('EquipmentID' => $equipId));
+        $globalInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_global', array('no' => 1));
+        $expLevel = $eqInfo->SkillLevel;
+        $expLevels = json_decode($globalInfo->EquipmentSkillExpTNL);
+        if ($expLevels[$expLevel] < $eqInfo->SkillExp) {
+            $expLevel++;
+            $eqCurrentExp = $eqInfo->SkillExp - $expLevels[$expLevel];
+            $eqInfo->SkillLevel = $expLevel;
+            $eqInfo->SkillExp = $eqCurrentExp;
+            $this->sqllibs->updateRow($this->db, 'tbl_user_equip', array(
+                "SkillExp" => $eqCurrentExp,
+                "SkillLevel" => $expLevel,
+                    ), array(
+                "EquipmentID" => $equipId));
+        }
+        $result['result'] = 200;
+        $result['message'] = "Success";
+        $result['equip'] = $eqInfo;
+        echo json_encode($result, JSON_NUMERIC_CHECK);
+        return;
+    }
+
+    //5 Week Equipment Skill Level
+    public function setPlayerName() {
+        $postVars = $this->utils->inflatePost(array('name', 'playerId'));
+        if ($postVars == false) {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if (!$this->sqllibs->isExist($this->db, 'tbl_user', array("PlayerID" => $postVars['playerId']))) {
+            $result['result'] = 400;
+            $result['message'] = "Player is not exist";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        $this->sqllibs->updateRow($this->db, 'tbl_user', array(
+            "PlayerName" => $postVars['name']
+                ), array(
+            "PlayerID" => $postVars['playerId']));
+        $result['result'] = 200;
+        $result['message'] = "Success";
         echo json_encode($result, JSON_NUMERIC_CHECK);
         return;
     }

@@ -215,11 +215,14 @@ class WebserviceController extends BaseController {
                 . "left join tbl_base_equip as B on A.EquipmentStatsID=B.EquipmentStateID "
                 . "where A.PlayerID='" . $postVars['uid'] . "'");
         $pvpInfos = $this->sqllibs->selectAllRows($this->db, 'tbl_user_pvp', array('PlayerID' => $postVars['uid']));
+        $stageInfos = $this->sqllibs->selectAllRows($this->db, 'tbl_user_stage', array('PlayerID' => $postVars['uid']));
+        $inventoryInfos = $this->sqllibs->selectAllRows($this->db, 'tbl_user_inventory', array('PlayerID' => $postVars['uid']));
         $userInfo['currency'] = $currency;
         $userInfo['character'] = $characterInfos;
         $userInfo['equip'] = $eqInfos;
         $userInfo['pvp'] = $pvpInfos;
-
+        $userInfo['stage'] = $stageInfos;
+        $userInfo['inventory'] = $inventoryInfos;
         $result['users'] = $userInfo;
         $result['result'] = 200;
         echo json_encode($result, JSON_NUMERIC_CHECK);

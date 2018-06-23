@@ -66,15 +66,7 @@
                                     <div class="col-md-2">
                                         <label>Cost</label>
                                         <input type='text' name="eqCost" class='form-control' value='<?php echo $eqInfo->Cost; ?>'/>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label>ExpTNL</label>
-                                        <input type='text' name="eqExp" class='form-control' value='<?php echo $eqInfo->ExpTNL; ?>'/>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label>SkillTNL</label>
-                                        <input type='text' name="eqSkillTnl" class='form-control' value='<?php echo $eqInfo->SkillTNL; ?>'/>
-                                    </div>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>

@@ -240,13 +240,8 @@ class AdminController extends BaseController
         $gInfo = array();
         if (count($globals) > 0) {
             $gInfo = $globals[0];
-        }
-        //$data = json_decode(json_encode($gInfo));
-        // foreach ($data as $key => $value) {
-        //     if (array_key_exists($key, $this->mapGlobalData)) {
-        //         $arrayData[$this->mapGlobalData[$key]] = $value;
-        //     }
-        // }
+        }        
+        unset($gInfo->no);
         $fp = fopen($fileName, 'w');
         fwrite($fp, json_encode($gInfo));
         fclose($fp);
@@ -275,7 +270,8 @@ class AdminController extends BaseController
     {
         $arrayData = array();
         foreach ($currency as $cy) {
-            $arrayData[$this->mapCurrency[$cy->cid]] = $cy->amount;
+            $currencyBase = $this->sqllibs->getOneRow($this->db, 'tbl_base_currency', array('no' => $cy->cid));
+            $arrayData[$currencyBase->name] = $cy->amount;
         }
         $fp = fopen($fileName, 'w');
         fwrite($fp, json_encode($arrayData));
@@ -409,10 +405,13 @@ class AdminController extends BaseController
         $data['userInfo'] = $this->sqllibs->getOneRow($this->db, 'tbl_user', array(
             "PlayerID" => $id
         ));
-        $data['inventorys'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_inventory');
-        $data['inventoryInfos'] = $this->sqllibs->rawSelectSql($this->db, "select A.*,B.name as name from tbl_user_inventory as A "
-                . "left join tbl_base_inventory as B on A.InventoryID=B.no "
-                . "where A.PlayerID='" . $id . "'");
+        // $data['inventorys'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_inventory');
+        // $data['inventoryInfos'] = $this->sqllibs->rawSelectSql($this->db, "select A.*,B.name as name from tbl_user_inventory as A "
+        //         . "left join tbl_base_inventory as B on A.InventoryID=B.no "
+        //         . "where A.PlayerID='" . $id . "'");
+        $data['inventorys'] = array();
+        $data['inventoryInfos'] = array();
+
         $data['currencys'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_currency');
         $data['currencyInfos'] = $this->sqllibs->selectAllRows($this->db, "tbl_user_currency", array('uid' => $id));
 

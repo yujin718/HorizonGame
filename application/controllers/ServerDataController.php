@@ -742,11 +742,9 @@ class ServerDataController extends BaseController
     }
     public function actionEditCharacterSkill()
     {
-        $postVars = $this->utils->inflatePost(array('chIdSkill', 'chSkill', 'chPassive', 'chLeader'));
+        $postVars = $this->utils->inflatePost(array('chIdSkill', 'chSkill'));
         $this->sqllibs->updateRow($this->db, 'tbl_base_character', array(
             "skill" => $postVars['chSkill'],
-            "passive" => $postVars['chPassive'],
-            "leaderskill" => $postVars['chLeader'],
                 ), array(
             "ch_id" => $postVars['chIdSkill']
         ));
@@ -780,7 +778,7 @@ class ServerDataController extends BaseController
     }
     public function actionEditCharacterInfo()
     {
-        $postVars = $this->utils->inflatePost(array('chId', 'chName', 'chRole', 'chExp', 'chSoul', 'chDesc','chBorderReq'));
+        $postVars = $this->utils->inflatePost(array('chId', 'chName', 'chRole','chSoul', 'chDesc','chBorderReq'));
         $this->sqllibs->updateRow($this->db, 'tbl_base_character', array(
             "Name" => $postVars['chName'],
             "Description" => $postVars['chDesc'],
@@ -796,12 +794,10 @@ class ServerDataController extends BaseController
 
     public function actionEditEquipInfo()
     {
-        $postVars = $this->utils->inflatePost(array('eqId', 'eqName', 'eqCost', 'eqExp', 'eqSkillTnl', 'eqDesc', 'eqSkillDesc'));
+        $postVars = $this->utils->inflatePost(array('eqId', 'eqName', 'eqCost','eqDesc', 'eqSkillDesc'));
         $this->sqllibs->updateRow($this->db, 'tbl_base_equip', array(
             "Name" => $postVars['eqName'],
             "Cost" => $postVars['eqCost'],
-            "ExpTNL" => $postVars['eqExp'],
-            "SkillTNL" => $postVars['eqSkillTnl'],
             "Description" => $postVars['eqDesc'],
             "SkillDescription" => $postVars['eqSkillDesc'],
                 ), array(

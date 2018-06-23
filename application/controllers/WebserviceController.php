@@ -356,18 +356,58 @@ class WebserviceController extends BaseController {
             echo json_encode($result, JSON_NUMERIC_CHECK);
             return;
         }
-        $stageProgressionInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_stage', array("StageID" => $postVars['stageId'], "user_id" => $postVars['userId']));
+
+        $stageProgressionInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_stage', array("StageID" => $postVars['stageId'], "PlayerID" => $postVars['userId']));
+        $baseData = $this->sqllibs->getOneRow($this->db, 'tbl_base_stage', array("StageID" => $postVars['stageId']));
+        $userInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array("PlayerID" => $postVars['userId']));
+        if ($baseData == null || $userInfo == null) {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+
         if ($stageProgressionInfo == null) {
+            $date = new DateTime();
+            $date->setTime(0, 0, 0);
+            $timeStamp = $date->getTimestamp();
             $this->sqllibs->insertRow($this->db, 'tbl_user_stage', array(
+                "PlayerID" => $postVars['userId'],
                 "StageID" => $postVars['stageId'],
                 "StarAcquired" => $postVars['star'],
-                "TriesNumber" => 1
+                "TriesNumber" => 1,
+                "DailyTries"=>1,
+                "Last_Try_Day_Timestamp" => $timeStamp
             ));
         } else {
             $this->sqllibs->updateRow($this->db, 'tbl_user_stage', array(
                 "StarAcquired" => $postVars['star'],
                     ), array(
                 "StageProgressionID" => $stageProgressionInfo->StageProgressionID));
+        }
+        //Add Experience
+        $userInfo->PlayerCurrentExp = $userInfo->PlayerCurrentExp + $baseData->PlayerExpReward;
+        $userInfo->PlayerTotalExp = $userInfo->PlayerTotalExp + $baseData->PlayerExpReward;
+        $this->sqllibs->updateRow($this->db, 'tbl_user', array(
+            "PlayerCurrentExp" => $userInfo->PlayerCurrentExp,
+            "PlayerTotalExp" => $userInfo->PlayerTotalExp,
+                ), array(
+            "PlayerID" => $postVars['userId']));
+
+        $this->updatePlayerLevel($postVars['userId']);
+        //Add Character Experience
+        $characterIds = json_decode($userInfo->Party);
+        foreach($characterIds as $chId)
+        {
+            $chInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_character', array("CharacterID" => $chId));
+            $chInfo->CurrentExp = $chInfo->CurrentExp + $baseData->CharacterExpReward;
+            $chInfo->TotalExp = $chInfo->TotalExp + $baseData->CharacterExpReward;
+            $this->sqllibs->updateRow($this->db, 'tbl_user_character', array(
+                "CurrentExp" => $chInfo->CurrentExp,
+                "TotalExp" => $chInfo->TotalExp,
+                    ), array(
+                "CharacterID" => $chId));
+                $this->updateCharacterLevel($chId);
         }
         $result = array();
         $result['result'] = 200;
@@ -673,9 +713,9 @@ class WebserviceController extends BaseController {
         $globalInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_global', array('no' => 1));
         $playerLevel = $userInfo->PlayerLevel;
         $expLevels = json_decode($globalInfo->PlayerExpTNL);
-        if ($expLevels[$playerLevel] < $userInfo->PlayerCurrentExp) {
+        if ($expLevels[$playerLevel - 1] < $userInfo->PlayerCurrentExp) {
+            $playerCurrentExp = $userInfo->PlayerCurrentExp - $expLevels[$playerLevel - 1];
             $playerLevel++;
-            $playerCurrentExp = $userInfo->PlayerCurrentExp - $expLevels[$playerLevel];
             $this->sqllibs->updateRow($this->db, 'tbl_user', array(
                 "PlayerCurrentExp" => $playerCurrentExp,
                 "PlayerLevel" => $playerLevel,
@@ -690,9 +730,9 @@ class WebserviceController extends BaseController {
         $globalInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_global', array('no' => 1));
         $chLevel = $chInfo->Level;
         $expLevels = json_decode($globalInfo->CharacterExpTNL);
-        if ($expLevels[$chLevel] < $chInfo->CurrentExp) {
+        if ($expLevels[$chLevel - 1] < $chInfo->CurrentExp) {
+            $chCurrentExp = $chInfo->CurrentExp - $expLevels[$chLevel - 1];
             $chLevel++;
-            $chCurrentExp = $chInfo->CurrentExp - $expLevels[$chLevel];
             $this->sqllibs->updateRow($this->db, 'tbl_user_character', array(
                 "CurrentExp" => $chCurrentExp,
                 "Level" => $chLevel,
@@ -891,5 +931,162 @@ class WebserviceController extends BaseController {
         echo json_encode($result, JSON_NUMERIC_CHECK);
         return;
     }
+
+    //5 Weeks Friend APIS
+    public function sendFriendRequest()
+    {
+        $postVars = $this->utils->inflatePost(array('playerId', 'friendId'));
+        if ($postVars == false) {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if (!$this->sqllibs->isExist($this->db, 'tbl_user', array("PlayerID" => $postVars['playerId']))) {
+            $result['result'] = 400;
+            $result['message'] = "Player is not exist";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if (!$this->sqllibs->isExist($this->db, 'tbl_user', array("PlayerID" => $postVars['friendId']))) {
+            $result['result'] = 400;
+            $result['message'] = "Player is not exist";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if ($postVars['playerId'] == $postVars['friendId'])
+        {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        $id = $this->sqllibs->insertRow($this->db, 'tbl_user_friend', array(
+            "PlayerID" => $postVars['playerId'],
+            "FriendID" => $postVars['friendId'],
+            "RequestStatus" => 1
+        ));
+
+        $id = $this->sqllibs->insertRow($this->db, 'tbl_user_friend', array(
+            "PlayerID" => $postVars['friendId'],
+            "FriendID" => $postVars['playerId'],
+            "RequestStatus" => 0
+        ));
+        $result['result'] = 200;
+        $result['message'] = "Success";
+        echo json_encode($result, JSON_NUMERIC_CHECK);
+        return;
+    }
+
+    public function acceptFriendRequest()
+    {
+        $postVars = $this->utils->inflatePost(array('playerId', 'friendId','status'));
+        if ($postVars == false) {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if (!$this->sqllibs->isExist($this->db, 'tbl_user', array("PlayerID" => $postVars['playerId']))) {
+            $result['result'] = 400;
+            $result['message'] = "Player is not exist";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if (!$this->sqllibs->isExist($this->db, 'tbl_user', array("PlayerID" => $postVars['friendId']))) {
+            $result['result'] = 400;
+            $result['message'] = "Player is not exist";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if ($postVars['playerId'] == $postVars['friendId'])
+        {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if ($postVars['status'] == 1)
+        {
+          $this->sqllibs->updateRow($this->db, 'tbl_user', array("RequestStatus" => 1),
+                array(
+                    "PlayerID" => $postVars['playerId'],
+                    "FriendID" => $postVars['friendId']
+          ));
+          $this->sqllibs->updateRow($this->db, 'tbl_user', array("RequestStatus" => 1),
+                array(
+                    "FriendID" => $postVars['playerId'],
+                    "PlayerID" => $postVars['friendId']
+          ));
+        }
+        else {
+            $this->sqllibs->deleteRow($this->db, 'tbl_user', array(
+              "PlayerID" => $postVars['playerId'],
+              "FriendID" => $postVars['friendId']
+            ));
+            $this->sqllibs->deleteRow($this->db, 'tbl_user', array(
+              "FriendID" => $postVars['playerId'],
+              "PlayerID" => $postVars['friendId']
+            ));
+        }
+        $result['result'] = 200;
+        $result['message'] = "Success";
+        echo json_encode($result, JSON_NUMERIC_CHECK);
+        return;
+    }
+    public function getFriendRequest()
+    {
+        $postVars = $this->utils->inflatePost(array('playerId'));
+        if ($postVars == false) {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if (!$this->sqllibs->isExist($this->db, 'tbl_user', array("PlayerID" => $postVars['playerId']))) {
+            $result['result'] = 400;
+            $result['message'] = "Player is not exist";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        $requests = $this->sqllibs->selectAllRows($this->db, 'tbl_user_friend', array("PlayerID" => $postVars['playerId']));
+        $datas = array();
+        foreach($reqeusts as $req)
+        {
+            $userData = $this->sqllibs->getOneRow($this->db, 'tbl_user', array(
+                "PlayerID" => $postVars['FriendID']
+            ));
+            $req->friend = $userData;
+            $datas[] = $req;
+        }
+        $result['result'] = 200;
+        $result['datas'] = $datas;
+        echo json_encode($result, JSON_NUMERIC_CHECK);
+        return;
+    }
+
+    //5 Weeks Mail APIS
+    public function getPlayerMails()
+    {
+        $postVars = $this->utils->inflatePost(array('playerId'));
+        if ($postVars == false) {
+            $result['result'] = 400;
+            $result['message'] = "Wrong Request";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        if (!$this->sqllibs->isExist($this->db, 'tbl_user', array("PlayerID" => $postVars['playerId']))) {
+            $result['result'] = 400;
+            $result['message'] = "Player is not exist";
+            echo json_encode($result, JSON_NUMERIC_CHECK);
+            return;
+        }
+        $mails = $this->sqllibs->selectAllRows($this->db, 'tbl_user_mail', array("PlayerID" => $postVars['playerId']));
+        $result['result'] = 200;
+        $result['datas'] = $mails;
+        echo json_encode($result, JSON_NUMERIC_CHECK);
+        return;
+    }
+
 
 }

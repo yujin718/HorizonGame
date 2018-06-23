@@ -315,10 +315,6 @@
                                 <p><?php echo $gInfo->BasePvPTicketCap; ?></p>
                             </div>
                             <div class="col-md-2">
-                                <label>PlayerExpTNL</label>
-                                <p><?php echo $gInfo->PlayerExpTNL; ?></p>
-                            </div>
-                            <div class="col-md-2">
                                 <label>PvPReset</label>
                                 <p><?php echo $gInfo->PvPReset; ?></p>
                             </div>
@@ -380,7 +376,6 @@
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Role</th>
-                                <th>ExpTNL</th>
                                 <th>SoulshardsTNL</th>
                                 <th>Action</th>
                             </tr>
@@ -395,7 +390,6 @@
                                     <td><?php echo $ch->Name; ?></td>
                                     <td><?php echo $ch->Description; ?></td>
                                     <td><?php echo $ch->Role; ?></td>
-                                    <td><?php echo $ch->ExpTNL; ?></td>
                                     <td><?php echo $ch->SoulshardTNL; ?></td>
                                     <td>
                                         <a href='<?php echo base_url() . 'index.php/ServerDataController/detailCharacterPage/' . $ch->CharacterStatsID; ?>'>Detail</a>&nbsp;&nbsp;&nbsp;
@@ -440,8 +434,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Cost</th>
-                                <th>ExpTNL</th>
-                                <th>SkillTNL</th>
+                                <th>Description</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -454,8 +447,7 @@
                                     <td><?php echo $eq->EquipmentStateID; ?></td>
                                     <td><?php echo $eq->Name; ?></td>
                                     <td><?php echo $eq->Cost; ?></td>
-                                    <td><?php echo $eq->ExpTNL; ?></td>
-                                    <td><?php echo $eq->SkillTNL; ?></td>
+                                    <td><?php echo $eq->Description; ?></td>
                                     <td>
                                         <a href='<?php echo base_url() . 'index.php/ServerDataController/detailEquipPage/' . $eq->EquipmentStateID; ?>'>Detail</a>&nbsp;&nbsp;&nbsp;
                                         <a href='<?php echo base_url() . 'index.php/ServerDataController/actionDeleteEquipment/' . $eq->EquipmentStateID; ?>'><?php echo lang("text_26"); ?></a>&nbsp;&nbsp;&nbsp;

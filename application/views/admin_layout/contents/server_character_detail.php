@@ -54,10 +54,6 @@
                                         <input type='text' name="chRole" class='form-control' value='<?php echo $chInfo->Role; ?>'/>
                                     </div>
                                     <div class="col-md-2">
-                                        <label>ExpTNL</label>
-                                        <input type='text' name="chExp" class='form-control' value='<?php echo $chInfo->ExpTNL; ?>'/>
-                                    </div>
-                                    <div class="col-md-2">
                                         <label>SoulShardTNL</label>
                                         <input type='text' name="chSoul" class='form-control' value='<?php echo $chInfo->SoulshardTNL; ?>'/>
                                     </div>
@@ -165,26 +161,6 @@
                                     <div class="col-md-12">
                                         <label>Skill</label>
                                         <textarea class='form-control' name="chSkill"><?php echo $chInfo->Skill; ?></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" style="margin-left:10px;margin-right: 10px;">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label>Passive</label>
-                                        <textarea class='form-control' name="chPassive"><?php echo $chInfo->Passive; ?></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" style="margin-left:10px;margin-right: 10px;">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label>Leader Skill</label>
-                                        <textarea class='form-control' name="chLeader"><?php echo $chInfo->LeaderSkill; ?></textarea>
                                     </div>
                                 </div>
                             </div>

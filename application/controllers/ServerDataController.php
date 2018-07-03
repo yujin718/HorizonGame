@@ -91,7 +91,7 @@ class ServerDataController extends BaseController
         }
         $data = $this->getViewParameters("ServerEquipDetail", "Admin");
         $data = $this->setMessages($data);
-        $data['eqInfo'] = $this->sqllibs->getOneRow($this->db, 'tbl_base_equip', array('EquipmentStateID' => $id));
+        $data['eqInfo'] = $this->sqllibs->getOneRow($this->db, 'tbl_base_equip', array('EquipmentStatsID' => $id));
         $statInfos = array();
         $baseStatsInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array('no' => $data['eqInfo']->BaseStats));
         $baseGrowInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array('no' => $data['eqInfo']->BaseStatsGrow));
@@ -274,7 +274,7 @@ class ServerDataController extends BaseController
         foreach ($equipInfos as $eq) {
             $this->sqllibs->deleteRow($this->db, 'tbl_base_stats', array('no' => $eq->stats_id));
         }
-        $this->sqllibs->deleteRow($this->db, 'tbl_base_equip', array('EquipmentStateID' => $id));
+        $this->sqllibs->deleteRow($this->db, 'tbl_base_equip', array('EquipmentStatsID' => $id));
         $this->sqllibs->deleteRow($this->db, 'tbl_base_starstats', array('type' => 1, 'data_id' => $id));
         redirect(base_url() . 'index.php/AdminController/serverDataPage');
     }
@@ -296,7 +296,7 @@ class ServerDataController extends BaseController
         foreach ($eqStats as $eqStat) {
             $this->sqllibs->deleteRow($this->db, 'tbl_base_stats', array('no' => $eqStat->stats_id));
         }
-        $this->sqllibs->deleteRow($this->db, 'tbl_base_equip', array('EquipmentStateID' => $id));
+        $this->sqllibs->deleteRow($this->db, 'tbl_base_equip', array('EquipmentStatsID' => $id));
         $this->sqllibs->deleteRow($this->db, 'tbl_base_starstats', array('data_id' => $id));
         $this->sqllibs->deleteRow($this->db, 'tbl_base_rune_requirement', array('eid' => $id));
         redirect(base_url() . 'index.php/AdminController/serverDataPage');
@@ -537,10 +537,10 @@ class ServerDataController extends BaseController
               "SkillTNL" => json_encode($arrayData['SkillTNL']),
               "StarStats" => json_encode($statsIds),
           );
-            if ($this->sqllibs->isExist($this->db, 'tbl_base_equip', array('EquipmentStateID' => $arrayData['EquipmentStatsID']))) {
-                $this->sqllibs->updateRow($this->db, 'tbl_base_equip', $in_datas, array('EquipmentStateID',$arrayData['EquipmentStatsID']));
+            if ($this->sqllibs->isExist($this->db, 'tbl_base_equip', array('EquipmentStatsID' => $arrayData['EquipmentStatsID']))) {
+                $this->sqllibs->updateRow($this->db, 'tbl_base_equip', $in_datas, array('EquipmentStatsID',$arrayData['EquipmentStatsID']));
             } else {
-                $in_datas['EquipmentStateID'] = $arrayData['EquipmentStatsID'];
+                $in_datas['EquipmentStatsID'] = $arrayData['EquipmentStatsID'];
                 $this->sqllibs->insertRow($this->db, 'tbl_base_equip', $in_datas);
             }
             //Insert StarStats
@@ -758,7 +758,7 @@ class ServerDataController extends BaseController
         $this->sqllibs->updateRow($this->db, 'tbl_base_equip', array(
             "Skill" => $postVars['eqSkill'],
                 ), array(
-            "EquipmentStateID" => $postVars['eqIdSkill']
+            "EquipmentStatsID" => $postVars['eqIdSkill']
         ));
         $this->session->set_flashdata('message', "Successfully Updated");
         redirect($this->agent->referrer());
@@ -801,7 +801,7 @@ class ServerDataController extends BaseController
             "Description" => $postVars['eqDesc'],
             "SkillDescription" => $postVars['eqSkillDesc'],
                 ), array(
-            "EquipmentStateID" => $postVars['eqId']
+            "EquipmentStatsID" => $postVars['eqId']
         ));
         $this->session->set_flashdata('message', "Successfully Updated");
         redirect($this->agent->referrer());

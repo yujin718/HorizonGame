@@ -212,7 +212,7 @@ class WebserviceController extends BaseController {
                 . "left join tbl_base_character as B on A.CharacterStatsID=B.CharacterStatsID "
                 . "where A.PlayerID='" . $postVars['uid'] . "'");
         $eqInfos = $this->sqllibs->rawSelectSql($this->db, "select A.*,B.name as name from tbl_user_equip as A "
-                . "left join tbl_base_equip as B on A.EquipmentStatsID=B.EquipmentStateID "
+                . "left join tbl_base_equip as B on A.EquipmentStatsID=B.EquipmentStatsID "
                 . "where A.PlayerID='" . $postVars['uid'] . "'");
         $pvpInfos = $this->sqllibs->selectAllRows($this->db, 'tbl_user_pvp', array('PlayerID' => $postVars['uid']));
         $stageInfos = $this->sqllibs->selectAllRows($this->db, 'tbl_user_stage', array('PlayerID' => $postVars['uid']));
@@ -515,37 +515,37 @@ class WebserviceController extends BaseController {
         $equips = $this->sqllibs->selectAllRows($this->db, "tbl_base_equip");
         $characterArray = array();
         foreach ($characters as $ch) {
-            $baseState = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->base_state_id));
-            $baseGrow = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->base_state_grow));
-            $border = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->border_state));
-            $starIds = $this->sqllibs->selectAllRows($this->db, 'tbl_base_starstats', array("data_id" => $ch->ch_id, "type" => '0'));
+            $baseState = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->BaseStats));
+            $baseGrow = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->BaseStatsGrow));
+            $border = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $ch->BorderStats));
+            $starIds = json_decode($ch->StarStats);
             $starArray = array();
             foreach ($starIds as $starInfo) {
-                $stInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $starInfo->stats_id));
+                $stInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $starInfo));
                 $starArray[] = $stInfo;
             }
             $extended = (object) array_merge((array) $ch, array(
-                        'base_state' => $baseState,
-                        'base_grow' => $baseGrow,
-                        'border_state' => $border,
-                        'star_stats' => $starArray,
+                        'BaseStats' => $baseState,
+                        'BaseStatsGrow' => $baseGrow,
+                        'BorderStats' => $border,
+                        'StarStats' => $starArray,
             ));
             $characterArray[] = $extended;
         }
         $equipArray = array();
         foreach ($equips as $eq) {
-            $baseState = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $eq->base_state_id));
-            $baseGrow = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $eq->base_state_grow));
-            $starIds = $this->sqllibs->selectAllRows($this->db, 'tbl_base_starstats', array("data_id" => $eq->eq_id, "type" => '0'));
+            $baseState = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $eq->BaseStats));
+            $baseGrow = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $eq->BaseStatsGrow));
+            $starIds = $this->sqllibs->selectAllRows($this->db, 'tbl_base_starstats', array("data_id" => $eq->EquipmentStatsID, "type" => '0'));
             $starArray = array();
             foreach ($starIds as $starInfo) {
                 $stInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array("no" => $starInfo->stats_id));
                 $starArray[] = $stInfo;
             }
             $extended = (object) array_merge((array) $eq, array(
-                        'base_state' => $baseState,
-                        'base_grow' => $baseGrow,
-                        'star_stats' => $starArray,
+                        'BaseStats' => $baseState,
+                        'BaseStatsGrow' => $baseGrow,
+                        'StarStats' => $starArray,
             ));
             $equipArray[] = $extended;
         }
@@ -567,43 +567,99 @@ class WebserviceController extends BaseController {
         $result['result'] = 200;
         echo json_encode($result, JSON_NUMERIC_CHECK);
     }
+    public function getGashapon()
+    {
 
-    public function buyGashapon() {
-        $postVars = $this->utils->inflatePost(array('uid', 'itemId'));
-        $userInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('no' => $postVars['uid']));
-        $itemInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_gashapon', array('no' => $postVars['itemId']));
-        $currencyInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_currency', array('uid' => $postVars['uid'], 'cid' => $itemInfo->currency));
-        if ($itemInfo->amount > 0) {
-            if ($currencyInfo == null || count($currencyInfo) == 0 || $currencyInfo->amount < $itemInfo->cost) {
-                $result['message'] = "Not enough currency";
-                $result['result'] = 401;
-            } else {
-                $amount = $itemInfo->amount - 1;
-                $currency = $currencyInfo->amount - $itemInfo->cost;
-                $this->sqllibs->updateRow($this->db, 'tbl_user_currency', array(
-                    "amount" => $currency,
-                        ), array(
-                    "no" => $currencyInfo->no));
-                $this->sqllibs->updateRow($this->db, 'tbl_base_gashapon', array(
-                    "amount" => $amount,
-                        ), array(
-                    "no" => $itemInfo->no));
-                $this->sqllibs->insertRow($this->db, 'tbl_order', array(
-                    "item_id" => $postVars['itemId'],
-                    "user_id" => $postVars['uid'],
-                    "amount" => 1,
-                    "type" => 1,
-                    "cost" => $itemInfo->cost
-                ));
-                $result['result'] = 200;
-            }
-        } else {
-            $result['message'] = "Not enough amount";
-            $result['result'] = 400;
+    }
+    public function gashaRollItem($tableName,$tier,$totalReward)
+    {
+        $result = array();
+        $gashaItems = $this->sqllibs->selectAllRows($this->db, $tableName);
+        $totalWeight = 0;
+        foreach($gashaItems as $gasha)
+        {
+          if ($gasha->Tier >= $tier)
+          {
+            $totalWeight += $gasha->Weight;
+          }
         }
+        $rngNumber = rand(0,$totalWeight);
+        $currentWeight = 0;
+        foreach($gashaItems as $gasha)
+        {
+          if ($gasha->Tier < $tier) continue;
+          if ($currentWeight >= $rngNumber)
+          {
+              $result[] = $gasha;
+              break;
+          }
+          $currentWeight += $gasha->Weight;
+        }
+        if ($totalReward == 1)
+        {
+            return $result;
+        }
+        $totalWeight = 0;
+        foreach($gashaItems as $gasha)
+        {
+            $totalWeight += $gasha->Weight;
+        }
+        for ($i = 0;$i < $totalReward;$i++)
+        {
+            $rngNumber = rand(0,$totalWeight);
+            $currentWeight = 0;
+            {
+              if ($gasha->Tier < $tier) continue;
+              if ($currentWeight >= $rngNumber)
+              {
+                  $result[] = $gasha;
+                  break;
+              }
+              $currentWeight += $gasha->Weight;
+            }
+        }
+        return $result;
+    }
+    public function buyGashapon() {
+
+        $postVars = $this->utils->inflatePost(array('gashaponID', 'playerID'));
+        $reqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_gashapon_requirement', array('GashaponID' => $postVars['gashaponID']));
+        $userInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('no' => $postVars['playerID']));
+        $currencyInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_currency', array('uid' => $postVars['playerID'],'cid' => $reqInfo->cid));
+        $date = new DateTime();
+        $items = array();
+        $result = array();
+        $type = "";
+        if ($reqInfo->Cooldown <= 0 && (substr($postVars['gashaponID'], 0, 5 ) === "Basic") && $userInfo->BasicGashaClaim <= $date->getTimestamp())
+        {
+            $userInfo->BasicGashaClaim += $reqInfo->Cooldown;
+            $items = $this->gashaRollItem($reqInfo->TableReference,$reqInfo->GuaranteedTier,$reqInfo->TotalRoll);
+            $type = $reqInfo->TableReference;
+        }
+        else if ($currencyInfo->amount >= $reqInfo->Quantity)
+        {
+            $currencyInfo->amount -= $reqInfo->Quantity;
+            $items = $this->gashaRollItem($reqInfo->TableReference,$reqInfo->GuaranteedTier,$reqInfo->TotalRoll);
+            $type = $reqInfo->TableReference;
+        }
+        $type = $this->getGashaType($type);
+        $result['items'][$type] = $items;
+        $result['result'] = 200;
         echo json_encode($result, JSON_NUMERIC_CHECK);
     }
 
+    public function getGashaType($table)
+    {
+        $types = ["basic","character","equip","premium"];
+        foreach($types as $type)
+        {
+          if ($this->util->endsWith($table,"basic"))
+          {
+              return "basic";
+          }
+        }
+        return "";
+    }
     public function buyShopItem() {
         $postVars = $this->utils->inflatePost(array('uid', 'itemId', 'itemAmount'));
         $userInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('no' => $postVars['uid']));
@@ -744,12 +800,51 @@ class WebserviceController extends BaseController {
     //5 Weeks Character Star
     public function updateCharacterStar($playerId, $characterID) {
 
-        if (!$this->sqllibs->isExist($this->db, 'tbl_user_character', array("CharacterID" => $characterID, "PlayerID" => $playerId))) {
-            return;
+        $postVars = $this->utils->inflatePost(array('playerId', 'characterStatId'));
+        $playerId = $postVars['playerId'];
+        $characterStatId = $postVars['characterStatId'];
+        $playerInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('PlayerID' => $playerId));
+        $soulShardInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_soulshard', array('PlayerID' => $playerId));
+        if ($postVars == false) {
+          $result['result'] = 400;
+          $result['message'] = "Wrong Request";
+          echo json_encode($result, JSON_NUMERIC_CHECK);
+          return;
+        }
+        if (!$this->sqllibs->isExist($this->db, 'tbl_user_character', array("CharacterStatsID" => $characterStatId, "PlayerID" => $playerId))) {
+            $characterBaseInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_character', array('CharacterStatsID' => $characterStatId));
+            $soulTNL = json_decode($characterBaseInfo->SoulshardTNL);
+            if ($soulTNL[0] <= $soulShardInfo->Quantity)
+            {
+              //Create Character
+              $createdId = $this->sqllibs->insertRow($this->db, 'tbl_user_character', array(
+                  "CharacterStatsID" => $characterStatId,
+                  "PlayerID" => $playerId,
+                  "CurrentExp" => 0,
+                  "Star" => 1,
+                  "Border" => 0,
+                  "TotalExp" => 0,
+                  "Level" => 1,
+                  "Equipment1" => "",
+                  "Equipment2" => "",
+                  "Equipment3" => ""
+              ));
+              $party = json_decode($playerInfo->Party);
+              $party[] = $createdId;
+              $this->sqllibs->updateRow($this->db, 'tbl_user', array(
+                  "Party" => json_encode($party),
+                      ), array(
+                  "PlayerID" => $playerId));
+            }
+            else {
+              $result['result'] = 400;
+              $result['message'] = "Not Enough Shard Error";
+              echo json_encode($result, JSON_NUMERIC_CHECK);
+              return;
+            }
         }
         $chInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_character', array('CharacterID' => $characterID));
         $chStatId = $chInfo->CharacterStatsID;
-        $playerInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('PlayerID' => $playerId));
         $soulShards = json_decode($playerInfo->SoulShard);
         foreach ($soulShards as $sInfo) {
             $soulInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_soulshards', array('no' => $sInfo));
@@ -776,7 +871,18 @@ class WebserviceController extends BaseController {
     //5 Weeks Character Border
     public function updateCharacterBorder($playerId, $characterID) {
 
+        $postVars = $this->utils->inflatePost(array('playerId', 'characterId'));
+        $playerId = $postVars['playerId'];
+        $characterID = $postVars['characterId'];
+
+        if ($postVars == false) {
+          $result['result'] = 400;
+          $result['message'] = "Wrong Request";
+          echo json_encode($result, JSON_NUMERIC_CHECK);
+          return;
+        }
         if (!$this->sqllibs->isExist($this->db, 'tbl_user_character', array("CharacterID" => $characterID, "PlayerID" => $playerId))) {
+
             return;
         }
         $chInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_character', array('CharacterID' => $characterID, "PlayerID" => $playerId));
@@ -821,6 +927,17 @@ class WebserviceController extends BaseController {
 
     //5 Weeks Equipment Level
     public function updateEquipLevel($equipId) {
+
+        $postVars = $this->utils->inflatePost(array('equipId'));
+        $equipId = $postVars['equipId'];
+
+        if ($postVars == false) {
+          $result['result'] = 400;
+          $result['message'] = "Wrong Request";
+          echo json_encode($result, JSON_NUMERIC_CHECK);
+          return;
+        }
+
         $eqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_equip', array('EquipmentID' => $equipId));
         $globalInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_global', array('no' => 1));
         $expLevel = $eqInfo->Level;
@@ -839,13 +956,23 @@ class WebserviceController extends BaseController {
     //5 Week Equipment Star
     public function updateEquipStar($playerId, $equipId) {
 
+        $postVars = $this->utils->inflatePost(array('playerId','equipId'));
+        $equipId = $postVars['equipId'];
+        $playerId = $postVars['playerId'];
+
+        if ($postVars == false) {
+          $result['result'] = 400;
+          $result['message'] = "Wrong Request";
+          echo json_encode($result, JSON_NUMERIC_CHECK);
+          return;
+        }
         if (!$this->sqllibs->isExist($this->db, 'tbl_user_equip', array("EquipmentID" => $equipId, "PlayerID" => $playerId))) {
             return;
         }
         $eqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_equip', array('EquipmentID' => $equipId));
         $eqStatId = $eqInfo->EquipmentStatsID;
         $playerInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('PlayerID' => $playerId));
-        $statInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_equip', array('EquipmentStateID' => $eqStatId));
+        $statInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_equip', array('EquipmentStatsID' => $eqStatId));
         $runeReqs = $statInfos->StarRuneRequirement;
         $runeIds = json_decode($runeReqs);
         foreach ($runeIds as $runeId) {
@@ -884,6 +1011,17 @@ class WebserviceController extends BaseController {
 
     //5 Week Equipment Skill Level
     public function updateEquipSkillLevel($playerId, $equipId) {
+
+        $postVars = $this->utils->inflatePost(array('playerId','equipId'));
+        $equipId = $postVars['equipId'];
+        $playerId = $postVars['playerId'];
+
+        if ($postVars == false) {
+          $result['result'] = 400;
+          $result['message'] = "Wrong Request";
+          echo json_encode($result, JSON_NUMERIC_CHECK);
+          return;
+        }
 
         $eqInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user_equip', array('EquipmentID' => $equipId));
         $globalInfo = $this->sqllibs->getOneRow($this->db, 'tbl_base_global', array('no' => 1));
@@ -1087,6 +1225,8 @@ class WebserviceController extends BaseController {
         echo json_encode($result, JSON_NUMERIC_CHECK);
         return;
     }
+
+
 
 
 }

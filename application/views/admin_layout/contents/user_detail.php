@@ -583,7 +583,7 @@
                                     <td>
                                         <?php
                                 foreach ($equips as $eq) {
-                                    if ($eq->EquipmentStateID == $equip->EquipmentStatsID) {
+                                    if ($eq->EquipmentStatsID == $equip->EquipmentStatsID) {
                                         echo $eq->Name;
                                     }
                                 } ?>
@@ -735,49 +735,88 @@
                     </table>
                 </div>
                 <div class="tab-pane" id="mailbox">
+                    <div class="row col-md-12" style="margin-bottom:20px;margin-left: -20px;">
+                        <div class="form-group">
+                            <form id='fromAddFilePlayer' name='fromAddFilePlayer' method='post' action='<?php echo base_url() . 'index.php/AdminController/actionUploadPlayerJson'; ?>' enctype="multipart/form-data">
+                                <input type="file" accept=".json" name="uploadPlayer" id="uploadPlayer" style="visibility: hidden; width: 1px; height: 1px" multiple onchange="fetchPlayerDataJSON()">
+                                <input type="hidden" name="accountUserId" id="accountUserId" value="<?php echo $userInfo->PlayerID; ?>">
+                                <div class="col-md-2" >
+                                    <a href='<?php echo base_url()."index.php/AdminController/addMailPage/". $userInfo->PlayerID?>' type="button" class ="btn btn-block btn-success">Send Mail</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Title</th>
                                 <th>Message</th>
-                                <th>Attachment</th>
+                                <th>Attachment1</th>
+                                <th>Attachment2</th>
+                                <th>Attachment3</th>
+                                <th>Attachment4</th>
+                                <th>Attachment5</th>
                                 <th>DateTime</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-
-                        </tbody>
-                    </table>
-                </div>
-                <div class="tab-pane" id="analytics">
-                    <table id="example1" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Login Datetime</th>
-                                <th>IP Address</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
                             <?php
-                            $i = 0;
-                            foreach ($analystics as $ana) {
-                                $i++; ?>
-                                <tr>
-                                    <td><?php echo $i; ?></td>
-                                    <td><?php echo $ana->createtime; ?></td>
-                                    <td><?php echo $ana->ipaddress; ?></td>
-                                    <td>
-                                        <a href='<?php echo base_url() . 'index.php/AdminController/actionDeleteAnalystic/' . $ana->no; ?>'><?php echo lang("text_26"); ?></a>&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                </tr>
+                              $itemTypes = ["Currency","SoulShard","Item","Equipment","Character"];
+                              foreach($emails as $email)
+                              {
+                              ?>
+                              <td><?php echo $email->MailID;?></td>
+                              <td><?php echo $email->Title;?></td>
+                              <td><?php echo $email->Message;?></td>
+                              <td>
                                 <?php
-                            }
+                                  if ($email->ItemType != -1)
+                                  {
+                                      echo "(".$itemTypes[$email->ItemType].")  ".$email->ItemID."   ".$email->Quantity;
+                                  }
+                                ?>
+                              </td>
+                              <td>
+                                <?php
+                                  if ($email->ItemType2 != -1)
+                                  {
+                                      echo "(".$itemTypes[$email->ItemType2].")  ".$email->ItemID2."   ".$email->Quantity2;
+                                  }
+                                ?>
+                              </td>
+                              <td>
+                                <?php
+                                  if ($email->ItemType3 != -1)
+                                  {
+                                      echo "(".$itemTypes[$email->ItemType3].")  ".$email->ItemID3."   ".$email->Quantity3;
+                                  }
+                                ?>
+                              </td>
+                              <td>
+                                <?php
+                                  if ($email->ItemType4 != -1)
+                                  {
+                                      echo "(".$itemTypes[$email->ItemType4].")  ".$email->ItemID4."   ".$email->Quantity4;
+                                  }
+                                ?>
+                              </td>
+                              <td>
+                                <?php
+                                  if ($email->ItemType5 != -1)
+                                  {
+                                      echo "(".$itemTypes[$email->ItemType5].")  ".$email->ItemID5."   ".$email->Quantity5;
+                                  }
+                                ?>
+                              </td>
+                              <td><?php echo $email->Expiry;?></td>
+                              <td>
+                                  <a href='<?php echo base_url() . 'index.php/AdminController/actionDeleteMail/' . $email->MailID; ?>'><?php echo lang("text_26"); ?></a>&nbsp;&nbsp;&nbsp;
+                              </td>
+                              <?php
+                              }
                             ?>
-
                         </tbody>
                     </table>
                 </div>
@@ -938,7 +977,7 @@
                             <?php
                             for ($i = 0; $i < count($equips); $i++) {
                                 ?>
-                                <option value='<?php echo $equips[$i]->EquipmentStateID; ?>'><?php echo $equips[$i]->Name; ?></option>
+                                <option value='<?php echo $equips[$i]->EquipmentStatsID; ?>'><?php echo $equips[$i]->Name; ?></option>
                                 <?php
                             }
                             ?>
@@ -989,7 +1028,7 @@
                             <?php
                             for ($i = 0; $i < count($equips); $i++) {
                                 ?>
-                                <option value='<?php echo $equips[$i]->EquipmentStateID; ?>'><?php echo $equips[$i]->Name; ?></option>
+                                <option value='<?php echo $equips[$i]->EquipmentStatsID; ?>'><?php echo $equips[$i]->Name; ?></option>
                                 <?php
                             }
                             ?>

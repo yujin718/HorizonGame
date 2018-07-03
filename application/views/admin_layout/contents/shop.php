@@ -11,10 +11,10 @@
         $('#editShopAmount').val(gInfo.amount);
         $('#editShopCost').val(gInfo.cost);
         $('#editShopCurrency').val(gInfo.currency);
-        
+
         $('#editItemDialog').modal();
     }
-    
+
 </script>
 <div class="row">
     <div class="col-md-12" style="margin: 10px; padding-right:30px;">
@@ -47,14 +47,14 @@
                                 $i++; ?>
                                 <tr>
                                     <td><?php echo $i; ?></td>
-                                    <td><?php echo $shop->name; ?></td>
-                                    <td><?php echo $shop->amount; ?></td>
-                                    <td><?php echo $shop->cost; ?></td>
+                                    <td><?php echo $shop->ItemID; ?></td>
+                                    <td><?php echo $shop->Quantity; ?></td>
+                                    <td><?php echo $shop->Cost; ?></td>
                                     <td>
                                         <?php
                                         foreach($currencys as $cy)
                                         {
-                                            if ($cy->no == $shop->currency)
+                                            if ($cy->no == $shop->cid)
                                             {
                                                 echo $cy->name;
                                             }

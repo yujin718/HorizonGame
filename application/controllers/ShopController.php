@@ -14,10 +14,10 @@ class ShopController extends BaseController
     {
         $postVars = $this->utils->inflatePost(array('shopName','shopAmount','shopCost','shopCurrency'));
         $this->sqllibs->insertRow($this->db, 'tbl_base_shop', array(
-            "name" => $postVars['shopName'],
-            "amount" => $postVars['shopAmount'],
-            "cost" => $postVars['shopCost'],
-            "currency" => $postVars['shopCurrency'],
+            "ItemID" => $postVars['shopName'],
+            "Quantity" => $postVars['shopAmount'],
+            "Cost" => $postVars['shopCost'],
+            "cid" => $postVars['shopCurrency'],
         ));
         redirect(base_url() . 'index.php/AdminController/shopPage');
     }
@@ -43,10 +43,10 @@ class ShopController extends BaseController
             return;
         }
         $this->sqllibs->updateRow($this->db, 'tbl_base_shop', array(
-            "name" => $postVars['editShopName'],
-            "amount" => $postVars['editShopAmount'],
-            "cost" => $postVars['editShopCost'],
-            "currency" => $postVars['editShopCurrency'],
+            "ItemID" => $postVars['editShopName'],
+            "Quantity" => $postVars['editShopAmount'],
+            "Cost" => $postVars['editShopCost'],
+            "cid" => $postVars['editShopCurrency'],
                 ), array(
             "no" => $postVars['editShopId']
         ));

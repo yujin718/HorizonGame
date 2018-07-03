@@ -19,7 +19,30 @@ class Utils
         }
         return $error;
     }
+    public function js_str($s)
+    {
+        $json = json_encode($s);
+        return '"' . addcslashes($json, "\0..\37\"\\") . '"';
+    }
 
+    public function js_array($array)
+    {
+        $temp = array_map(array(get_called_class(),'js_str'), $array);
+        return '[' . implode(',', $temp) . ']';
+    }
+    function startsWith($haystack, $needle)
+    {
+         $length = strlen($needle);
+         return (substr($haystack, 0, $length) === $needle);
+    }
+
+    function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+
+        return $length === 0 ||
+        (substr($haystack, -$length) === $needle);
+    }
     public function inflatePost($fields)
     {
         $result = array();

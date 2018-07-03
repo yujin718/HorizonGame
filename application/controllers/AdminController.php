@@ -69,7 +69,13 @@ class AdminController extends BaseController
         }
         $data = $this->getViewParameters("Gashapons", "Admin");
         $data = $this->setMessages($data);
-        $data['gashapons'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_gashapon');
+        $data['reqs'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_gashapon_requirement');
+        $data['users'] = $this->sqllibs->selectAllRows($this->db, 'tbl_user');
+        $data['basics'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_gashapon_basic');
+        $data['characters'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_gashapon_character');
+        $data['currencys'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_currency');
+        $data['equips'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_gashapon_equip');
+        $data['premiums'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_gashapon_premium');
         $this->load->view('view_admin', $data);
     }
     public function shopPage()
@@ -240,7 +246,7 @@ class AdminController extends BaseController
         $gInfo = array();
         if (count($globals) > 0) {
             $gInfo = $globals[0];
-        }        
+        }
         unset($gInfo->no);
         $fp = fopen($fileName, 'w');
         fwrite($fp, json_encode($gInfo));
@@ -330,7 +336,7 @@ class AdminController extends BaseController
             //Add Base State,BaseStatsGrow,BorderStats,StarStats
             $baseStat = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array('no' => $equip->BaseStats));
             $base_state_grow = $this->sqllibs->getOneRow($this->db, 'tbl_base_stats', array('no' => $equip->BaseStatsGrow));
-            $startIds = $this->sqllibs->selectAllRows($this->db, 'tbl_base_starstats', array('type'=>1,'data_id' => $equip->EquipmentStateID));
+            $startIds = $this->sqllibs->selectAllRows($this->db, 'tbl_base_starstats', array('type'=>1,'data_id' => $equip->EquipmentStatsID));
 
             $arrayData->BaseStats = $this->getStatesArray($baseStat);
             $arrayData->BaseStatsGrow = $this->getStatesArray($base_state_grow);
@@ -395,6 +401,98 @@ class AdminController extends BaseController
         return $stats;
     }
 
+    public function addMailPage($id)
+    {
+      if (!$this->isLogin()) {
+            $this->utils->redirectPage('index.php/AdminController/userDetailPage/'.$id);
+          return;
+      }
+      $data = $this->getViewParameters("AddEmail", "Admin");
+      $data['userInfo'] = $this->sqllibs->getOneRow($this->db, 'tbl_user', array(
+          "PlayerID" => $id
+      ));
+      $currencys = $this->sqllibs->selectAllRows($this->db,'tbl_base_currency');
+      $soulshards = $this->sqllibs->selectAllRows($this->db,'tbl_base_soulshard');
+      $items = $this->sqllibs->selectAllRows($this->db,'tbl_base_item_encyclopedia');
+      $equips = $this->sqllibs->selectAllRows($this->db,'tbl_base_equip');
+      $characters = $this->sqllibs->selectAllRows($this->db,'tbl_base_character');
+
+      $items1[0] = $currencys;
+      $items1[1] = $soulshards;
+      $items1[2] = $items;
+      $items1[3] = $equips;
+      $items1[4] = $characters;
+
+      $items1 = $this->utils->js_array($items1);
+      $data['items'] = $items1;
+      $data = $this->setMessages($data);
+      $this->load->view('view_admin', $data);
+    }
+    public function actionAddMail()
+    {
+        $postVars = $this->utils->inflatePost(array('email_title', 'email_message', 'email_uid','email_attach'));
+        $attach = json_decode($postVars['email_attach']);
+        $arrayItem = array();
+        $itemType1 = -1;  $itemID1 = -1;  $itemQuantity1 = -1;
+        $itemType2 = -1;  $itemID2 = -1;  $itemQuantity2 = -1;
+        $itemType3 = -1;  $itemID3 = -1;  $itemQuantity3 = -1;
+        $itemType4 = -1;  $itemID4 = -1;  $itemQuantity4 = -1;
+        $itemType5 = -1;  $itemID5 = -1;  $itemQuantity5 = -1;
+
+        if (count($attach) > 0)
+        {
+            $itemType1 = $attach[0]->type;
+            $itemID1 = $attach[0]->id;
+            $itemQuantity1 = $attach[0]->quantity;
+        }
+        if (count($attach) > 1)
+        {
+            $itemType2 = $attach[1]->type;
+            $itemID2 = $attach[1]->id;
+            $itemQuantity2 = $attach[1]->quantity;
+        }
+        if (count($attach) > 2)
+        {
+            $itemType3 = $attach[2]->type;
+            $itemID3 = $attach[2]->id;
+            $itemQuantity3 = $attach[2]->quantity;
+        }
+        if (count($attach) > 3)
+        {
+            $itemType4 = $attach[3]->type;
+            $itemID4 = $attach[3]->id;
+            $itemQuantity4 = $attach[3]->quantity;
+        }
+        if (count($attach) > 4)
+        {
+            $itemType5 = $attach[4]->type;
+            $itemID5 = $attach[4]->id;
+            $itemQuantity5 = $attach[4]->quantity;
+        }
+        $this->sqllibs->insertRow($this->db, 'tbl_user_mail', array(
+            "PlayerID" => $postVars['email_uid'],
+            "Title" => $postVars['email_title'],
+            "Message" => $postVars['email_message'],
+            "ItemType" => $itemType1,
+            "ItemID" =>$itemID1,
+            "Quantity" => $itemQuantity1,
+            "ItemType2" => $itemType2,
+            "ItemID2" => $itemID2,
+            "Quantity2" => $itemQuantity2,
+            "ItemType3" => $itemType3,
+            "ItemID3" => $itemID3,
+            "Quantity3" => $itemQuantity3,
+            "ItemType4" => $itemType4,
+            "ItemID4" => $itemID4,
+            "Quantity4" => $itemQuantity4,
+            "ItemType5" => $itemType5,
+            "ItemID5" => $itemID5,
+            "Quantity5" => $itemQuantity5,
+            "IsClaimed" => 0,
+        ));
+        $this->utils->redirectPage('index.php/AdminController/userDetailPage/'.$postVars['email_uid']);
+    }
+
     public function userDetailPage($id)
     {
         if (!$this->isLogin()) {
@@ -417,7 +515,7 @@ class AdminController extends BaseController
 
         $data['equips'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_equip');
         $data['equipInfos'] = $this->sqllibs->rawSelectSql($this->db, "select A.*,B.name as name from tbl_user_equip as A "
-                . "left join tbl_base_equip as B on A.EquipmentStatsID=B.EquipmentStateID "
+                . "left join tbl_base_equip as B on A.EquipmentStatsID=B.EquipmentStatsID "
                 . "where A.PlayerID='" . $id . "'");
         $data['characters'] = $this->sqllibs->selectAllRows($this->db, 'tbl_base_character');
         $data['characterInfo'] = $this->sqllibs->selectAllRows($this->db, 'tbl_user_character', array('PlayerID' => $id));
@@ -433,7 +531,7 @@ class AdminController extends BaseController
                 . "where A.uid='" . $id . "'");
         $data['pvpInfo'] = $this->sqllibs->selectAllRows($this->db, 'tbl_user_pvp', array('PlayerID' => $id));
         $data['analystics'] = $this->sqllibs->selectAllRows($this->db, 'tbl_user_analystic', array('uid' => $id));
-
+        $data['emails'] = $this->sqllibs->selectAllRows($this->db,'tbl_user_mail',array('PlayerID' => $id));
 
         $this->createPlayerJsonData($data['userInfo'], 'player.json');
         $this->createCurrencyJsonData($data['currencyInfos'], 'currency.json');
@@ -443,6 +541,18 @@ class AdminController extends BaseController
 
         $data = $this->setMessages($data);
         $this->load->view('view_admin', $data);
+    }
+    public function actionDeleteMail($id)
+    {
+        if (!$this->isLogin()) {
+            $this->utils->redirectPage(base_url().'index.php');
+            return;
+        }
+        $this->sqllibs->deleteRow($this->db, 'tbl_user_mail', array(
+            "MailID" => $id
+        ));
+        $this->session->set_flashdata('message', "Delete Successful");
+        redirect($this->agent->referrer());
     }
 
     public function changeAdminPassword()
@@ -929,7 +1039,7 @@ class AdminController extends BaseController
     public function actionSetUserPermission($id = null)
     {
         if (!$this->isLogin()) {
-            $this->utils->redirectPage(ADMIN_PAGE_HOME);
+            $this->utils->redirectPage('index.php');
             return;
         }
         if ($id == null) {
@@ -947,16 +1057,16 @@ class AdminController extends BaseController
                 $this->db,
                 'tbl_user',
                 array(
-                "status" => 0,
-                "lock_duration" => $timestamp,
+                "Status" => 0,
+                "LockDuration" => $timestamp,
                     ),
-                array('no' => $id)
+                array('PlayerID' => $id)
             );
-            $this->session->set_flashdata('message', lang('text_37'));
-            redirect(base_url() . ADMIN_PAGE_USERS);
+            $this->session->set_flashdata('message', "Permission Changed");
+            redirect(base_url() . 'index.php/AdminController/userPage');
             return;
         }
-        $rtInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('no' => $id));
+        $rtInfo = $this->sqllibs->getOneRow($this->db, 'tbl_user', array('PlayerID' => $id));
         $featureValue = 0;
         if ($rtInfo->status == 0) {
             $featureValue = 1;
@@ -967,14 +1077,14 @@ class AdminController extends BaseController
             array(
             "status" => $featureValue
                 ),
-            array('no' => $id)
+            array('PlayerID' => $id)
         );
         if ($featureValue == 1) {
-            $this->session->set_flashdata('message', lang('text_36'));
+            $this->session->set_flashdata('message', "User Enabled");
         } else {
-            $this->session->set_flashdata('message', lang('text_37'));
+            $this->session->set_flashdata('message', "User Disabled");
         }
-        redirect(base_url() . ADMIN_PAGE_USERS);
+        redirect(base_url() . 'index.php/AdminController/userPage');
     }
 
     public function actionDeleteUsers($id)

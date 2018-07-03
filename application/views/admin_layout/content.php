@@ -35,6 +35,15 @@
         case "Shop":
             include("contents/shop.php");
             break;
+        case "AddEmail":
+            include("contents/add_mail.php");
+            break;
+        case "AddGashapon":
+            include("contents/add_gashapon.php");
+            break;
+        case "EditGashapon":
+            include("contents/edit_gashapon.php");
+            break;
     }
     ?>
 </div>

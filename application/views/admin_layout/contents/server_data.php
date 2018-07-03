@@ -444,13 +444,13 @@
                             foreach ($equips as $eq) {
                                 $i++; ?>
                                 <tr>
-                                    <td><?php echo $eq->EquipmentStateID; ?></td>
+                                    <td><?php echo $eq->EquipmentStatsID; ?></td>
                                     <td><?php echo $eq->Name; ?></td>
                                     <td><?php echo $eq->Cost; ?></td>
                                     <td><?php echo $eq->Description; ?></td>
                                     <td>
-                                        <a href='<?php echo base_url() . 'index.php/ServerDataController/detailEquipPage/' . $eq->EquipmentStateID; ?>'>Detail</a>&nbsp;&nbsp;&nbsp;
-                                        <a href='<?php echo base_url() . 'index.php/ServerDataController/actionDeleteEquipment/' . $eq->EquipmentStateID; ?>'><?php echo lang("text_26"); ?></a>&nbsp;&nbsp;&nbsp;
+                                        <a href='<?php echo base_url() . 'index.php/ServerDataController/detailEquipPage/' . $eq->EquipmentStatsID; ?>'>Detail</a>&nbsp;&nbsp;&nbsp;
+                                        <a href='<?php echo base_url() . 'index.php/ServerDataController/actionDeleteEquipment/' . $eq->EquipmentStatsID; ?>'><?php echo lang("text_26"); ?></a>&nbsp;&nbsp;&nbsp;
                                     </td>
                                 </tr>
                                 <?php

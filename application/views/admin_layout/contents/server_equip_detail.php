@@ -55,7 +55,7 @@
             <div class="tab-content">
                 <div class="active tab-pane" id="summary">
                     <form id='editEqInfo' name='editEqInfo' method='POST' action='<?php echo base_url() . 'index.php/ServerDataController/actionEditEquipInfo'; ?>'>
-                        <input type='hidden' name="eqId" value='<?php echo $eqInfo->EquipmentStateID; ?>'/>
+                        <input type='hidden' name="eqId" value='<?php echo $eqInfo->EquipmentStatsID; ?>'/>
                         <div class="row" style="margin-left:10px;">
                             <div class="form-group">
                                 <div class="row">
@@ -66,7 +66,7 @@
                                     <div class="col-md-2">
                                         <label>Cost</label>
                                         <input type='text' name="eqCost" class='form-control' value='<?php echo $eqInfo->Cost; ?>'/>
-                                    </div>                                    
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +150,7 @@
                                     <td><?php echo $stInfo['data']->ResistLight; ?></td>
                                     <td><?php echo $stInfo['data']->ResistDark; ?></td>
                                     <td>
-                                        <a href='#' onclick="editStatsDialog('<?php echo $stInfo['type']; ?>', '<?php echo htmlspecialchars(json_encode($stInfo['data'])); ?>', '<?php echo $eqInfo->EquipmentStateID; ?>')">Edit</a>&nbsp;&nbsp;&nbsp;
+                                        <a href='#' onclick="editStatsDialog('<?php echo $stInfo['type']; ?>', '<?php echo htmlspecialchars(json_encode($stInfo['data'])); ?>', '<?php echo $eqInfo->EquipmentStatsID; ?>')">Edit</a>&nbsp;&nbsp;&nbsp;
                                         <?php
                                         if ($stInfo['type'] == 2) {
                                             ?>
@@ -168,7 +168,7 @@
                 </div>
                 <div class="tab-pane" id="skill">
                     <form id='editEquipSkill' name='editEquipSkill' method='POST' action='<?php echo base_url() . 'index.php/ServerDataController/actionEditEquipSkill'; ?>'>
-                        <input type='hidden' name="eqIdSkill" value='<?php echo $eqInfo->EquipmentStateID; ?>'/>
+                        <input type='hidden' name="eqIdSkill" value='<?php echo $eqInfo->EquipmentStatsID; ?>'/>
                         <div class="row" style="margin-left:10px;margin-right: 10px;">
                             <div class="form-group">
                                 <div class="row">
@@ -321,7 +321,7 @@
                     <label for="exampleInputEmail1">Resist Dark</label>
                     <input class='form-control' type='text' name='ch_star_dark' id='ch_star_dark' placeholder='Value'/></a>
 
-                    <input type='hidden' name='ch_star_id' id='ch_star_id' value='<?php echo $eqInfo->EquipmentStateID; ?>'/></a>
+                    <input type='hidden' name='ch_star_id' id='ch_star_id' value='<?php echo $eqInfo->EquipmentStatsID; ?>'/></a>
                     <input type='hidden' name='ch_star_type' id='ch_star_type' value='1'/>
 
                 </div>
@@ -351,7 +351,7 @@
                     <label for="exampleInputEmail1">Quantity</label>
                     <input class='form-control' type='number' name='edit_rune_quantity' id='edit_rune_quantity' placeholder='Value'/></a>
 
-                    <input type='hidden' name='edit_rune_eq_id' id='edit_rune_eq_id' value='<?php echo $eqInfo->EquipmentStateID; ?>'/></a>
+                    <input type='hidden' name='edit_rune_eq_id' id='edit_rune_eq_id' value='<?php echo $eqInfo->EquipmentStatsID; ?>'/></a>
                     <input type='hidden' name='edit_rune_eq_no' id='edit_rune_eq_no' value=''/></a>
                 </div>
                 <div class="modal-footer">
@@ -379,7 +379,7 @@
                     <label for="exampleInputEmail1">Quantity</label>
                     <input class='form-control' type='number' name='rune_quantity' id='rune_quantity' placeholder='Value'/></a>
 
-                    <input type='hidden' name='rune_eq_id' id='rune_eq_id' value='<?php echo $eqInfo->EquipmentStateID; ?>'/></a>
+                    <input type='hidden' name='rune_eq_id' id='rune_eq_id' value='<?php echo $eqInfo->EquipmentStatsID; ?>'/></a>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo lang("text_79"); ?></button>

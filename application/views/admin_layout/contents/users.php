@@ -60,14 +60,14 @@
                                             <?php
                                             if ($user->Status == 0) {
                                                 ?>
-                                                <a href='<?php echo base_url() . ADMIN_ACTION_PERMISSSIONUSER . '/' . $user->PlayerID; ?>'><?php echo lang("text_34"); ?></a>&nbsp;&nbsp;&nbsp;
+                                                <a href='<?php echo base_url() . "index.php/AdminController/actionSetUserPermission" . '/' . $user->PlayerID; ?>'>Set Enable</a>&nbsp;&nbsp;&nbsp;
                                                 <?php
                                             } else {
                                                 ?>
-                                                <a href='#' onclick="changeStatus('<?php echo $user->PlayerID; ?>')"><?php echo lang("text_35"); ?></a>&nbsp;&nbsp;&nbsp;
+                                                <a href='#' onclick="changeStatus('<?php echo $user->PlayerID; ?>')">Set Disable</a>&nbsp;&nbsp;&nbsp;
                                                 <?php
                                             } ?>
-                                            <a href='<?php echo base_url() . "index.php/AdminController/actionDeleteUser/" . $user->PlayerID; ?>'><?php echo lang("text_26"); ?></a>&nbsp;&nbsp;&nbsp;
+                                            <a href='<?php echo base_url() . "index.php/AdminController/actionDeleteUser/" . $user->PlayerID; ?>'>Delete</a>&nbsp;&nbsp;&nbsp;
 
                                         </td>
                                     </tr>
